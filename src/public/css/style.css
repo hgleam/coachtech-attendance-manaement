@@ -1,0 +1,1366 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 基準のフォントサイズを設定 */
+html {
+    /* PCサイズ (1400-1540px) のベースフォントサイズ設定 (1rem = 10px) */
+    font-size: 62.5%;
+}
+
+
+
+/* カスタムプロパティ */
+:root {
+    /* カラー */
+    --primary-color: #FF5555;
+    --secondary-color: #333333;
+    --third-color: #0073CC;
+    --header-background-color: #333333;
+    --background-color: #F0EFF2;
+    --background-color-dark: #E5E5E5;
+    --border-color: #5F5F5F;
+    --header-text-color: #FFFFFF;
+    --text-label-color: #737373;
+    --text-color: #000000;
+    --button-color: #FFFFFF;
+    --button-background-color: #D9D9D9;
+    --error-color: #FF0000;
+
+    /* レイアウト幅 */
+    --site-width: 1500px;
+    --content-width: 1400px;
+    --side-padding: 2rem;
+    --header-height: 80px;
+    --main-top-margin: 8rem;
+    --main-bottom-margin: 2rem;
+
+    /* フォントサイズ */
+    --font-size-xs: 1.2rem; /* 12px */
+    --font-size-sm: 1.4rem; /* 14px */
+    --font-size-base: 1.6rem; /* 16px */
+    --font-size-lg: 1.8rem; /* 18px */
+    --font-size-xl: 2rem; /* 20px */
+    --font-size-2xl: 2.4rem; /* 24px */
+    --font-size-3xl: 3rem; /* 30px */
+    --font-size-4xl: 3.6rem; /* 36px */
+    --font-size-5xl: 4.8rem; /* 48px */
+    --font-size-6xl: 6rem; /* 64px */
+    --font-size-7xl: 7.2rem; /* 72px */
+    --font-size-8xl: 9.6rem; /* 96px */
+    --font-size-9xl: 12rem; /* 120px */
+}
+
+/* ベース */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    width: 100%;
+}
+
+/* ---- ヘッダー ---- */
+.header {
+    background-color: var(--header-background-color);
+    border-bottom: 1px solid var(--border-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 80px;
+}
+
+/* 内側 */
+.header__inner {
+    height: 100%;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+/* 左側（ロゴ） */
+.header__left {
+    display: flex;
+    align-items: center;
+}
+
+/* ロゴ */
+.header__logo {
+    display: block;
+    margin-right: 2rem;
+}
+
+/* ロゴ画像 */
+.header__logo img {
+    height: 32px;
+    width: auto;
+}
+
+/* 中央 */
+.header__center {
+    flex: 1;
+    max-width: 400px;
+    margin: 0 2rem;
+}
+
+/* 右側 */
+.header__right {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+/* ナビゲーション */
+.header__nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-left: auto;
+}
+
+/* ナビゲーションリンク */
+.header__nav-link {
+    color: var(--header-text-color);
+    text-decoration: none;
+    font-size: var(--font-size-xl);
+    white-space: nowrap;
+}
+
+/* リンクのように見せるボタン */
+.header__nav-link--button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+/* ナビゲーションフォーム */
+.header__nav-form {
+    display: inline;
+}
+
+/* ナビゲーションボタン */
+.header__nav-button {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    padding: 0.8rem 2rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: var(--font-size-xl);
+    white-space: nowrap;
+}
+
+/* メニューボタン */
+.header__menu-button {
+    display: none;
+    width: 30px;
+    height: 30px;
+    position: relative;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 2rem;
+}
+
+/* ハンバーガーメニューの線 */
+.header__menu-button span {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: var(--header-text-color);
+    border-radius: 4px;
+    transition: .35s ease-in-out;
+}
+
+/* ハンバーガーメニューの閉じている時の線の状態 */
+.header__menu-button span:nth-child(1) {
+    top: 4px;
+}
+
+.header__menu-button span:nth-child(2) {
+    top: 14px;
+}
+
+.header__menu-button span:nth-child(3) {
+    bottom: 4px;
+}
+
+/* ハンバーガーメニューが開いている時の線の状態 */
+.header__menu-button.is-open span:nth-child(1) {
+    top: 14px;
+    transform: rotate(-45deg);
+}
+
+.header__menu-button.is-open span:nth-child(2) {
+    opacity: 0;
+}
+
+.header__menu-button.is-open span:nth-child(3) {
+    bottom: 14px;
+    transform: rotate(45deg);
+}
+
+/* ハンバーガーメニュー内の検索窓を通常時は非表示 */
+.header__nav-search {
+    display: none;
+}
+
+/* ---- メインコンテンツ ---- */
+.main {
+    margin-top: var(--header-height);
+    min-height: calc(100vh - var(--header-height));
+    padding: 1rem 6rem 2rem 1rem;
+}
+
+.main__inner {
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: var(--main-top-margin) 0 var(--main-bottom-margin);
+}
+
+/* フォームのスタイル */
+.form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* グループ */
+.form__group {
+    margin-bottom: 2rem;
+}
+
+/* ラベル */
+.form__label {
+    display: block;
+    font-size: var(--font-size-xl);
+    margin-bottom: 0.5rem;
+    color: var(--text-label-color);
+}
+
+/* 入力フィールド */
+.form__input {
+    width: 100%;
+    padding: 1rem;
+    font-size: var(--font-size-xl);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+/* ボタン */
+.form__button {
+    width: 100%;
+    padding: 1rem;
+    font-size: var(--font-size-xl);
+    color: #fff;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* ボタンのホバー */
+.form__button:hover {
+    background-color: var(--primary-color-dark);
+}
+
+
+
+/* ---- 会員登録ページ ---- */
+.register-page {
+    max-width: 680px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+/* 内側 */
+.register-page__body {
+    border-radius: 8px;
+    padding: 2rem;
+}
+/* タイトル */
+.register-page__title {
+    font-size: var(--font-size-4xl);
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--text-color);
+}
+/* フォーム */
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+/* フォームのグループ */
+.register-form__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+/* フォームのラベル */
+.register-form__label {
+    font-size: var(--font-size-2xl);
+    font-weight: bold;
+    color: var(--text-label-color);
+}
+/* フォームの入力 */
+.register-form__input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: var(--font-size-2xl);
+    transition: border-color 0.2s;
+}
+/* フォームの入力のエラー */
+.register-form__input--error {
+    border-color: var(--error-color);
+}
+/* フォームの入力のエラー */
+.register-form__error {
+    color: var(--error-color);
+    font-size: var(--font-size-2xl);
+}
+/* フォームのアクション */
+.register-form__actions {
+    margin-top: 1rem;
+}
+/* フォームのボタン */
+.register-form__button {
+    width: 100%;
+    padding: 1rem;
+    margin-top: 6rem;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: var(--font-size-2xl);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+/* フォームのボタンのホバー */
+.register-form__button:hover {
+    filter: brightness(0.9);
+}
+/* フォームのリンク */
+.register-form__links {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+/* フォームのリンク */
+.register-form__link {
+    color: var(--third-color);
+    text-decoration: none;
+    font-size: var(--font-size-2xl);
+}
+/* フォームのリンクのホバー */
+.register-form__link:hover {
+    text-decoration: underline;
+}
+
+
+
+/* ---- ログインページ ---- */
+.login-page {
+    max-width: 680px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+/* 内側 */
+.login-page__body {
+    border-radius: 8px;
+    padding: 2rem;
+}
+/* タイトル */
+.login-page__title {
+    font-size: var(--font-size-4xl);
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--text-color);
+}
+/* フォーム */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+/* フォームのグループ */
+.login-form__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+/* フォームのラベル */
+.login-form__label {
+    font-size: var(--font-size-2xl);
+    font-weight: bold;
+    color: var(--text-label-color);
+}
+/* フォームの入力 */
+.login-form__input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: var(--font-size-2xl);
+    transition: border-color 0.2s;
+}
+/* フォームの入力のエラー */
+.login-form__input--error {
+    border-color: var(--error-color);
+}
+/* フォームの入力のエラー */
+.login-form__error {
+    color: var(--error-color);
+    font-size: var(--font-size-2xl);
+}
+/* フォームのボタン */
+.login-form__button {
+    width: 100%;
+    padding: 1rem;
+    margin-top: 6rem;
+    background-color: var(--secondary-color);
+    color: var(--button-color);
+    border: none;
+    border-radius: 4px;
+    font-size: var(--font-size-2xl);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+/* フォームのボタンのホバー */
+.login-form__button:hover {
+    cursor: pointer;
+    /* ホバー時は少し色を変える */
+    filter: brightness(0.9);
+}
+/* フォームのリンク */
+.login-form__links {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+/* フォームのリンク */
+.login-form__link {
+    color: var(--third-color);
+    text-decoration: none;
+    font-size: var(--font-size-2xl);
+}
+/* フォームのリンクのホバー */
+.login-form__link:hover {
+    text-decoration: underline;
+}
+
+
+/* ---- メール認証ページ ---- */
+.verify-page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 20rem 2rem 2rem;
+    background-color: #fff;
+}
+/* 内側 */
+.verify-page__body {
+    text-align: center;
+}
+/* メッセージ */
+.verify-page__message {
+    font-size: var(--font-size-2xl);
+    font-weight: bold;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    color: var(--text-color);
+}
+/* 成功メッセージ */
+.verify-page__success {
+    background-color: var(--background-color);
+    color: var(--primary-color);
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 2rem;
+}
+/* フォーム */
+.verify-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+}
+/* フォームのグループ */
+.verify-form__group {
+    width: 100%;
+    max-width: 320px;
+    padding-top: 4rem;
+}
+/* フォームのボタン */
+.verify-form__button {
+    width: 100%;
+    padding: 2rem;
+    background-color: var(--button-background-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 16px;
+    font-size: var(--font-size-2xl);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+/* フォームのボタンのホバー */
+.verify-form__button:hover {
+    background-color: var(--button-background-color);
+}
+/* フォームのリンク */
+.verify-form__links {
+    text-align: center;
+}
+/* フォームのリンク */
+.verify-form__link {
+    color: var(--third-color);
+    text-decoration: none;
+    font-size: var(--font-size-2xl);
+}
+/* フォームのリンクのホバー */
+.verify-form__link:hover {
+    text-decoration: underline;
+}
+
+/* モバイルメニュー */
+.header__mobile-menu {
+    display: none;
+}
+
+    .header__menu-button {
+        display: block;
+    }
+
+    /* モバイルメニューの表示制御 */
+    .header__mobile-menu {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        right: 0;
+        background-color: var(--header-background-color);
+        padding: 2rem;
+        z-index: 1000;
+    }
+
+    .header__mobile-menu.is-open {
+        display: block;
+    }
+
+    .header__mobile-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .header__mobile-menu .header__nav-link,
+    .header__mobile-menu .header__nav-button {
+        display: block;
+        width: 100%;
+        padding: 1.2rem;
+        text-align: center;
+        background: none;
+        border: none;
+        font-size: var(--font-size-xl);
+        cursor: pointer;
+    }
+
+
+
+/* ---- 勤怠ページ ---- */
+.attendance-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    height: calc(100vh - var(--header-height) - 4rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 中央寄せ */
+}
+
+/* 打刻セクション */
+.attendance-clock {
+    flex-grow: 0; /* 中央寄せのためにgrowしない */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent; /* 背景を透明に */
+    border-radius: 8px;
+    padding: 4rem 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.attendance-clock__status-badge {
+    background-color: #dcdfe6;
+    color: #606266;
+    padding: 0.5em 1.2em;
+    border-radius: 20px; /* 角を丸める */
+    font-size: var(--font-size-base);
+    margin-bottom: 2rem;
+}
+
+.attendance-clock__datetime {
+    margin-bottom: 4rem; /* さらに間隔を広げる */
+}
+
+.attendance-clock__date {
+    font-size: var(--font-size-3xl);
+    color: #333;
+    margin-bottom: 3rem; /* さらに間隔を広げる */
+}
+
+.attendance-clock__time {
+    font-size: var(--font-size-9xl);
+    font-weight: bold;
+    color: #000;
+    line-height: 1;
+}
+
+.attendance-clock__button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 12px; /* 少し丸みを強くする */
+    padding: 1.5rem 5rem;
+    font-size: var(--font-size-2xl);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.attendance-clock__button:hover {
+    background-color: #333;
+}
+
+
+/* 勤怠一覧のスタイルは不要なため削除 */
+
+/* ---- 勤怠一覧ページ ---- */
+.attendance-list-page {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.attendance-list-page__header {
+    margin-bottom: 2rem;
+}
+
+.attendance-list-page__title {
+    font-size: var(--font-size-3xl);
+    font-weight: bold;
+    border-left: 8px solid #333;
+    padding-left: 1rem;
+}
+
+.month-navigator {
+    display: flex;
+    justify-content: space-between; /* 両端に配置 */
+    align-items: center;
+    margin-bottom: 3rem; /* 間隔を広げる */
+    background-color: #fff; /* 背景を白に */
+    padding: 1rem 2rem; /* 左右のパディングを調整 */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* 影を追加 */
+}
+
+.month-navigator__link {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: var(--font-size-base);
+    font-weight: bold;
+}
+
+.month-navigator__current {
+    font-size: var(--font-size-xl);
+    font-weight: bold;
+    /* marginは不要になる */
+}
+
+.attendance-list-card {
+    background-color: #fff; /* 背景を白に */
+    color: var(--text-color);
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* 影を追加 */
+}
+
+.attendance-list-card__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-weight: bold;
+}
+
+.attendance-list-card__header th {
+    text-align: left;
+    padding: 1.5rem 1rem;
+    font-size: var(--font-size-base);
+    color: #666;
+    border-bottom: 2px solid #e0e0e0; /* 太い横線を追加 */
+}
+
+.attendance-list-card__body td {
+    padding: 1.5rem 1rem;
+    font-size: var(--font-size-base);
+    border-bottom: 1px solid #eee;
+}
+
+.attendance-list-card__body tr:last-child td {
+    border-bottom: none;
+}
+
+.attendance-list-card__body a {
+    font-weight: bold;
+    color: #000;
+    text-decoration: none;
+}
+
+/* ---- 勤怠詳細ページ ---- */
+.attendance-detail-page {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.attendance-detail-page__header {
+    margin-bottom: 2rem;
+}
+
+.attendance-detail-page__title {
+    font-size: var(--font-size-3xl);
+    font-weight: bold;
+    border-left: 8px solid #333;
+    padding-left: 1rem;
+}
+
+.detail-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 3rem 4rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.detail-form__row {
+    display: flex;
+    align-items: center;
+    border-bottom: 0.25rem solid #eee;
+    padding: 2rem 0;
+}
+
+.detail-form__row:last-of-type {
+    border-bottom: none;
+}
+
+.detail-form__label {
+    width: 35%;
+    flex-shrink: 0;
+    font-size: var(--font-size-base);
+    color: var(--text-label-color);
+    font-weight: bold;
+}
+
+.detail-form__value,
+.detail-form__value-group {
+    width: 80%;
+    font-size: var(--font-size-base);
+    font-weight: bold;
+}
+
+.detail-form__value-group span {
+    font-size: var(--font-size-base);
+}
+
+.detail-form__value-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.detail-form__input,
+.detail-form__textarea {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0.8rem;
+    font-size: var(--font-size-base);
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.detail-form__input::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+.detail-form__input {
+    width: 150px;
+    text-align: center;
+}
+
+.detail-form__textarea {
+    width: 100%;
+    height: 80px;
+    resize: vertical;
+}
+
+.detail-form__separator {
+    font-weight: bold;
+}
+
+.detail-form__actions {
+    text-align: right;
+    margin-top: 2rem;
+}
+
+.detail-form__button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 1rem 3rem;
+    font-size: var(--font-size-xl);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* ---- 申請一覧ページ ---- */
+.correction-request-list-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem var(--side-padding);
+}
+
+.correction-request-list-page__header {
+    margin-bottom: 2rem;
+}
+
+.correction-request-list-page__title {
+    font-size: var(--font-size-3xl);
+    font-weight: bold;
+    color: var(--text-color);
+    margin: 0;
+    border-left: 8px solid #333;
+    padding-left: 1rem;
+    margin-bottom: 5rem;
+}
+
+
+
+/* タブ */
+.request-tabs {
+    display: flex;
+    gap: 8rem;
+    margin-bottom: 2rem;
+    margin-left: 4rem;
+    border-bottom: 1px solid var(--text-color);
+    padding-bottom: 0.5rem;
+}
+
+.request-tabs__item {
+    font-size: var(--font-size-xl);
+    color: var(--text-color);
+    text-decoration: none;
+    position: relative;
+}
+
+.request-tabs__item--active {
+    font-weight: bold;
+}
+
+.request-tabs__item--inactive {
+    font-weight: normal;
+}
+
+/* 申請一覧カード */
+.request-list-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.request-list-card__table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.request-list-card__header {
+    background-color: #f8f9fa;
+}
+
+.request-list-card__header th {
+    padding: 1.5rem 1rem;
+    text-align: left;
+    font-size: var(--font-size-base);
+    font-weight: bold;
+    color: var(--text-label-color);
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.request-list-card__header th:nth-child(1) {
+    width: 15%;
+    text-align: center;
+} /* 状態 */
+.request-list-card__header th:nth-child(2) { width: 15%; } /* 名前 */
+.request-list-card__header th:nth-child(3) { width: 15%; } /* 対象日時 */
+.request-list-card__header th:nth-child(4) { width: 15%; } /* 申請理由 */
+.request-list-card__header th:nth-child(5) { width: 15%; } /* 申請日時 */
+.request-list-card__header th:nth-child(6) { width: 15%; } /* 詳細 */
+
+.request-list-card__body td {
+    padding: 1.5rem 1rem;
+    border-bottom: 1px solid #eee;
+    font-size: var(--font-size-base);
+    color: var(--text-label-color);
+    font-weight: bold;
+}
+
+.request-list-card__body tr:last-child td {
+    border-bottom: none;
+}
+
+.request-list-card__body td:nth-child(1) {
+    text-align: center;
+}
+
+.request-list-card__detail-link {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.request-list-card__detail-link:hover {
+    text-decoration: underline;
+}
+
+/* ステータスバッジ */
+.status-badge {
+    display: inline-block;
+    border-radius: 20px;
+    font-size: var(--font-size-sm);
+    font-weight: bold;
+    text-align: center;
+    background-color: transparent;
+    color: var(--text-label-color);
+}
+
+.status-badge--pending {
+    background-color: transparent;
+    color: var(--text-label-color);
+}
+
+.status-badge--approved {
+    background-color: transparent;
+    color: var(--text-label-color);
+}
+
+.status-badge--rejected {
+    background-color: transparent;
+    color: var(--text-label-color);
+}
+
+
+
+/* ---- 管理者：スタッフ一覧ページ ---- */
+.staff-list-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem var(--side-padding);
+}
+
+.staff-list-page__header {
+    margin-bottom: 2rem;
+}
+
+.staff-list-page__title {
+    font-size: var(--font-size-3xl);
+    font-weight: bold;
+    border-left: 8px solid #333;
+    padding-left: 1rem;
+    margin-bottom: 3rem;
+}
+
+/* スタッフ一覧カード */
+.staff-list-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.staff-list-card__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-weight: bold;
+    text-align: left;
+}
+
+.staff-list-card__header th {
+    text-align: left !important;
+    padding: 1.5rem 1rem;
+    font-size: var(--font-size-base);
+    color: var(--text-label-color);
+    border-bottom: 2px solid #e0e0e0;
+    font-weight: bold;
+}
+
+.staff-list-card__body td {
+    padding: 1.5rem 1rem;
+    font-size: var(--font-size-base);
+    color: var(--text-label-color);
+    border-bottom: 2px solid #e0e0e0;
+    font-weight: bold;
+    text-align: left !important;
+}
+
+.staff-list-card__body tr:last-child td {
+    border-bottom: none;
+}
+
+.staff-list-card__detail-link {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.staff-list-card__detail-link:hover {
+    text-decoration: underline;
+}
+
+
+
+/* ---- 管理者：スタッフ別勤怠一覧ページ ---- */
+.staff-attendance-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem var(--side-padding);
+}
+
+.staff-attendance-page__header {
+    margin-bottom: 2rem;
+}
+
+.staff-attendance-page__title {
+    font-size: var(--font-size-3xl);
+    font-weight: bold;
+    border-left: 8px solid #333;
+    padding-left: 1rem;
+    margin-bottom: 3rem;
+}
+
+/* スタッフ別勤怠一覧カード */
+.staff-attendance-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 3rem;
+}
+
+.staff-attendance-card__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-weight: bold;
+}
+
+.staff-attendance-card__header th {
+    text-align: left;
+    padding: 1.5rem 1rem;
+    font-size: var(--font-size-base);
+    color: var(--text-label-color);
+    border-bottom: 2px solid #e0e0e0;
+    font-weight: bold;
+    background-color: #f8f9fa;
+}
+
+.staff-attendance-card__body td {
+    padding: 1.5rem 1rem;
+    font-size: var(--font-size-base);
+    color: var(--text-label-color);
+    border-bottom: 1px solid #eee;
+    font-weight: bold;
+    text-align: left;
+}
+
+.staff-attendance-card__body tr:last-child td {
+    border-bottom: none;
+}
+
+.staff-attendance-card__detail-link {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.staff-attendance-card__detail-link:hover {
+    text-decoration: underline;
+}
+
+/* CSV出力ボタン */
+.staff-attendance-page__actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+.staff-attendance-page__csv-button {
+    background-color: var(--text-color);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 1rem 2rem;
+    font-size: var(--font-size-base);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.staff-attendance-page__csv-button:hover {
+    filter: brightness(0.9);
+}
+
+
+
+/* ---- 管理者：勤怠一覧ページ ---- */
+.admin-attendance-list-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem var(--side-padding);
+}
+
+.admin-attendance-list-page__header {
+    margin-bottom: 2rem;
+}
+
+.admin-attendance-list-page__title {
+    font-size: var(--font-size-3xl);
+    font-weight: bold;
+    border-left: 8px solid #333;
+    padding-left: 1rem;
+    margin-bottom: 3rem;
+}
+
+/* 日付ナビゲーター */
+.date-navigator {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+    background-color: #fff;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.date-navigator__link {
+    color: var(--text-label-color);
+    text-decoration: none;
+    font-size: var(--font-size-base);
+    font-weight: bold;
+}
+
+.date-navigator__current {
+    font-size: var(--font-size-xl);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.date-navigator__icon {
+    font-style: normal;
+}
+
+/* 管理者勤怠一覧カード */
+.admin-attendance-list-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.admin-attendance-list-card__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-weight: bold;
+}
+
+.admin-attendance-list-card__header th {
+    text-align: left;
+    padding: 1.5rem 1rem;
+    font-size: var(--font-size-base);
+    color: var(--text-label-color);
+    border-bottom: 2px solid #E1E1E1;
+    font-weight: bold;
+}
+
+.admin-attendance-list-card__body td {
+    padding: 1.5rem 1rem;
+    font-size: var(--font-size-base);
+    color: var(--text-label-color);
+    border-bottom: 2px solid #E1E1E1;
+    font-weight: bold;
+}
+
+.admin-attendance-list-card__body tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-attendance-list-card__detail-link {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.admin-attendance-list-card__detail-link:hover {
+    text-decoration: underline;
+}
+
+/* ---- 管理者：申請一覧ページ ---- */
+.admin-request-list-page {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+
+.admin-request-list-page__title {
+    font-size: var(--font-size-4xl);
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.admin-request-list-card {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 2.5rem;
+}
+
+.admin-request-list-card__table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.admin-request-list-card__header th {
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 1.5rem;
+    font-size: var(--font-size-xl);
+}
+
+.admin-request-list-card__body td {
+    border-bottom: 1px solid #ddd;
+    padding: 1.5rem;
+    font-size: var(--font-size-xl);
+}
+
+.admin-request-list-card__body tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-request-list-card__body a {
+    color: var(--third-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.admin-request-list-card__body a:hover {
+    text-decoration: underline;
+}
+
+/* ---- 管理者：修正申請詳細ページ ---- */
+.correction-approve-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem var(--side-padding);
+}
+
+.correction-approve-page__header {
+    margin-bottom: 2rem;
+}
+
+.correction-approve-page__title {
+    font-size: var(--font-size-3xl);
+    font-weight: bold;
+    border-left: 8px solid #333;
+    padding-left: 1rem;
+    margin-bottom: 3rem;
+}
+
+/* 修正申請詳細カード */
+.correction-approve-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 3rem 4rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 3rem;
+}
+
+.correction-approve-card__row {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding: 2rem 0;
+}
+
+.correction-approve-card__row:last-child {
+    border-bottom: none;
+}
+
+.correction-approve-card__label {
+    width: 35%;
+    flex-shrink: 0;
+    font-size: var(--font-size-base);
+    color: var(--text-label-color);
+    font-weight: bold;
+}
+
+.correction-approve-card__value {
+    width: 65%;
+    font-size: var(--font-size-base);
+    color: var(--text-label-color);
+    font-weight: bold;
+}
+
+/* 承認ボタン */
+.correction-approve-page__actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+.correction-approve-page__button {
+    background-color: var(--text-color);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 1rem 3rem;
+    font-size: var(--font-size-xl);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.correction-approve-page__button:hover {
+    filter: brightness(0.9);
+}
+
