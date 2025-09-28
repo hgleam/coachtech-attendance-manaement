@@ -5,10 +5,13 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Constants\Attendance;
 
+/**
+ * 勤怠記録テーブルのマイグレーション
+ */
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * マイグレーションを実行
      */
     public function up(): void
     {
@@ -18,7 +21,7 @@ return new class extends Migration
             $table->date('date');
             $table->time('clock_in_time');
             $table->time('clock_out_time')->nullable();
-            $table->enum('work_state', array_keys(Attendance::WORK_STATES));
+            $table->enum('work_state', ['BEFORE_WORK', 'WORKING', 'ON_BREAK', 'AFTER_LEAVE']);
             $table->enum('approval_status', array_keys(Attendance::APPROVAL_STATUSES))->nullable();
             $table->timestamp('applied_at')->nullable()->comment('修正申請日時');
             $table->text('remark')->nullable();
@@ -34,7 +37,7 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * マイグレーションを削除
      */
     public function down(): void
     {

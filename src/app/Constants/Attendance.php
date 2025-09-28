@@ -11,10 +11,10 @@ class Attendance
      * 勤怠状態
      */
     const WORK_STATES = [
-        'BEFORE_WORK' => '出勤前',
-        'AFTER_WORK' => '出勤後',
+        'BEFORE_WORK' => '勤務外',
+        'WORKING' => '出勤中',
         'ON_BREAK' => '休憩中',
-        'AFTER_LEAVE' => '退勤後'
+        'AFTER_LEAVE' => '退勤済'
     ];
 
     /**

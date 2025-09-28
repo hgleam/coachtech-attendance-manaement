@@ -4,10 +4,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * 休憩記録テーブルのマイグレーション
+ */
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * マイグレーションを実行
      */
     public function up(): void
     {
@@ -24,7 +27,7 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * マイグレーションを削除
      */
     public function down(): void
     {

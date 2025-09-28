@@ -52,11 +52,28 @@ Route::get('/attendance/{id}', function ($id) {
     // NOTE: 承認待ちのデザインも確認できるよう、両方のパターンを含める
     return view('attendances.show', ['id' => $id]);
 })->name('attendance.show');
+Route::get('/attendance', [App\Http\Controllers\AttendanceController::class, 'index'])
+    ->middleware('auth')
+    ->name('attendance.index');
+
+Route::post('/attendance/clock-in', [App\Http\Controllers\AttendanceController::class, 'clockIn'])
+    ->middleware('auth')
+    ->name('attendance.clock-in');
 
 Route::get('/stamp_correction_request/list', function () {
     return view('stamp_correction_requests.list');
 })->name('stamp_correction_request.list');
+Route::post('/attendance/clock-out', [App\Http\Controllers\AttendanceController::class, 'clockOut'])
+    ->middleware('auth')
+    ->name('attendance.clock-out');
 
+Route::post('/attendance/break-start', [App\Http\Controllers\AttendanceController::class, 'breakStart'])
+    ->middleware('auth')
+    ->name('attendance.break-start');
+
+Route::post('/attendance/break-end', [App\Http\Controllers\AttendanceController::class, 'breakEnd'])
+    ->middleware('auth')
+    ->name('attendance.break-end');
 
 // 管理者
 Route::prefix('admin')->name('admin.')->group(function () {

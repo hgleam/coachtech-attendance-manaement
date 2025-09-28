@@ -2,22 +2,53 @@
 
 @section('content')
 <div class='attendance-page'>
-    {{-- 打刻セクション --}}
-    <div class='attendance-clock'>
-        {{-- 勤務ステータス --}}
-        <div class='attendance-clock__status-badge'>勤務外</div>
+    @if (session('status'))
+        <div class="alert alert-success">
+            {{ session('status') }}
+        </div>
+    @endif
 
-        {{-- 日付と時刻 --}}
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <div class='attendance-clock'>
+        <div class='attendance-clock__status-badge'>{{ $workStateDisplay }}</div>
+
         <div class='attendance-clock__datetime'>
-            <div class='attendance-clock__date'>2023年6月1日(木)</div>
-            <div class='attendance-clock__time'>08:00</div>
+            <div class='attendance-clock__date'>{{ $currentTime->format('Y年n月j日') }}({{ $currentTime->format('D') }})</div>
+            <div class='attendance-clock__time'>{{ $currentTime->format('H:i') }}</div>
         </div>
 
-        {{-- 打刻ボタン --}}
         <div class='attendance-clock__actions'>
-            <form action='#' method='POST'>
-                <button type='submit' class='attendance-clock__button'>出勤</button>
-            </form>
+            @if ($currentWorkState === 'BEFORE_WORK')
+                <form action="{{ route('attendance.clock-in') }}" method='POST'>
+                    @csrf
+                    <button type='submit' class='attendance-clock__button'>出勤</button>
+                </form>
+            @elseif ($currentWorkState === 'WORKING')
+                <form action="{{ route('attendance.clock-out') }}" method='POST' style="display: inline-block; margin-right: 30px;">
+                    @csrf
+                    <button type='submit' class='attendance-clock__button'>退勤</button>
+                </form>
+                <form action="{{ route('attendance.break-start') }}" method='POST' style="display: inline-block;">
+                    @csrf
+                    <button type='submit' class='attendance-clock__button attendance-clock__button--break'>休憩入</button>
+                </form>
+            @elseif ($currentWorkState === 'ON_BREAK')
+                <form action="{{ route('attendance.break-end') }}" method='POST'>
+                    @csrf
+                    <button type='submit' class='attendance-clock__button attendance-clock__button--break'>休憩戻</button>
+                </form>
+            @elseif ($currentWorkState === 'AFTER_LEAVE')
+                <p class="attendance-clock__end-message">お疲れ様でした。</p>
+            @endif
         </div>
     </div>
 </div>
