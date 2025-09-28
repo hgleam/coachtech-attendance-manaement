@@ -47,9 +47,9 @@ class Kernel extends HttpKernel
     ];
 
     /**
-     * The application's route middleware.
+     * アプリケーションのルートミドルウェア
      *
-     * These middleware may be assigned to groups or used individually.
+     * これらのミドルウェアはグループに割り当てられるか、個別に使用できます。
      *
      * @var array<string, class-string|string>
      */
@@ -63,5 +63,7 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        'admin_or_user' => \App\Http\Middleware\AdminOrUserMiddleware::class,
     ];
 }

@@ -81,9 +81,10 @@ Route::get('/attendance/list', [App\Http\Controllers\AttendanceListController::c
 
 // 管理者
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/login', function () {
-        return view('admin.login');
-    })->name('login');
+    // ログイン関連は認証なしでアクセス可能
+    Route::get('/login', [App\Http\Controllers\Admin\AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [App\Http\Controllers\Admin\AuthController::class, 'login'])->name('login');
+    Route::post('/logout', [App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('logout');
 
     Route::get('/staff/list', function () {
         return view('admin.staff.list');

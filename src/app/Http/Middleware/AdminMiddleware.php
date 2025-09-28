@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * 管理者または一般ユーザーミドルウェア
+ * 管理者ミドルウェア
  */
-class AdminOrUserMiddleware
+class AdminMiddleware
 {
     /**
      * リクエストを処理
@@ -21,12 +21,11 @@ class AdminOrUserMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // 一般ユーザーがログインしているか、管理者がログインしているかチェック
-        if (auth()->check() || session()->has('admin_id')) {
-            return $next($request);
+        // セッションに管理者情報があるかチェック
+        if (!session()->has('admin_id')) {
+            return redirect()->route('admin.login');
         }
 
-        // どちらもログインしていない場合は一般ユーザーのログイン画面にリダイレクト
-        return redirect()->route('login');
+        return $next($request);
     }
 }
