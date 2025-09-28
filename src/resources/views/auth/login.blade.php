@@ -5,13 +5,12 @@
     <div class='login-page__body'>
         <h2 class='login-page__title'>ログイン</h2>
 
-        <form method='POST' action='{{ route("login") }}' class='login-form'>
+        <form method='POST' action='{{ route("login") }}' class='login-form' novalidate>
             @csrf
 
-            {{-- Email Address --}}
             <div class='login-form__group'>
                 <label for='email' class='login-form__label'>メールアドレス</label>
-                <input id='email' type='email' class='login-form__input @error('email') is-invalid @enderror' name='email' value='{{ old('email') }}' required autocomplete='email' autofocus>
+                <input id='email' type='email' class='login-form__input @error("email") is-invalid @enderror' name='email' value='{{ old("email") }}'>
                 @error('email')
                     <span class='login-form__error' role='alert'>
                         <strong>{{ $message }}</strong>
@@ -19,10 +18,9 @@
                 @enderror
             </div>
 
-            {{-- Password --}}
             <div class='login-form__group'>
                 <label for='password' class='login-form__label'>パスワード</label>
-                <input id='password' type='password' class='login-form__input @error('password') is-invalid @enderror' name='password' required autocomplete='current-password'>
+                <input id='password' type='password' class='login-form__input @error("password") is-invalid @enderror' name='password'>
                 @error('password')
                     <span class='login-form__error' role='alert'>
                         <strong>{{ $message }}</strong>
@@ -38,7 +36,7 @@
         </form>
 
         <div class='login-form__links'>
-            <a class='login-form__link' href='{{ route('register') }}'>
+            <a class='login-form__link' href='{{ route("register") }}'>
                 会員登録はこちら
             </a>
         </div>

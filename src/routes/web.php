@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('attendance.index');
+    }
+    return redirect()->route('login');
 });
 
 // 仮ルーティング
@@ -21,10 +25,15 @@ Route::get('/', function () {
 Route::get('/register', [App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])
     ->name('register');
 
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
 Route::post('/register', [App\Http\Controllers\Auth\RegisteredUserController::class, 'store']);
+
+Route::get('/login', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'create'])
+    ->name('login');
+
+Route::post('/login', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'store']);
+
+Route::post('/logout', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'destroy'])
+    ->name('logout');
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');

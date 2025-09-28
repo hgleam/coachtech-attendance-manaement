@@ -21,10 +21,20 @@
             </a>
 
             <nav class='header__nav'>
-                @if (Auth::check())
+                @if (session()->has('admin_id') && session()->has('admin_name'))
+                    {{-- 管理者用ナビゲーション --}}
+                    <a href='{{ route("admin.staff.list") }}' class='header__nav-link'>スタッフ一覧</a>
+                    <a href='{{ route("admin.attendance.list") }}' class='header__nav-link'>勤怠一覧</a>
+                    <a href='{{ route("admin.stamp_correction_request.list") }}' class='header__nav-link'>申請一覧</a>
+                    <form method='POST' action='{{ route("admin.logout") }}' class='header__nav-form'>
+                        @csrf
+                        <button type='submit' class='header__nav-link header__nav-link--button'>ログアウト</button>
+                    </form>
+                @elseif (Auth::check())
+                    {{-- 一般ユーザー用ナビゲーション --}}
                     <a href='{{ route("attendance.index") }}' class='header__nav-link'>勤怠</a>
                     <a href='{{ route("attendance.list") }}' class='header__nav-link'>勤怠一覧</a>
-                    <a href='{{ route("stamp_correction_request.list") }}' class='header__nav-link'>申請一覧</a>
+                    <a href='{{ route("stamp_correction_request.list") }}' class='header__nav-link'>申請</a>
                     <form method='POST' action='{{ route("logout") }}' class='header__nav-form'>
                         @csrf
                         <button type='submit' class='header__nav-link header__nav-link--button'>ログアウト</button>
