@@ -240,4 +240,148 @@ class AttendanceRecord extends Model
 
         return ['success' => true, 'message' => '休憩を終了しました'];
     }
+
+    /**
+     * 時間文字列を分に変換
+     * @param string $timeString
+     * @return int
+     */
+    public static function parseTimeToMinutes($timeString)
+    {
+        list($hours, $minutes) = explode(':', $timeString);
+        return intval($hours) * 60 + intval($minutes);
+    }
+
+    /**
+     * 時間の形式を正規化（H:i:s -> H:i）
+     * @param string $timeString
+     * @return string|null
+     */
+    public static function normalizeTime($timeString)
+    {
+        if (empty($timeString)) {
+            return null;
+        }
+
+        // H:i:s 形式の場合は H:i に変換
+        if (preg_match('/^\d{1,2}:\d{2}:\d{2}$/', $timeString)) {
+            return substr($timeString, 0, 5);
+        }
+
+        // H:i 形式の場合はそのまま返す
+        if (preg_match('/^\d{1,2}:\d{2}$/', $timeString)) {
+            return $timeString;
+        }
+
+        return null;
+    }
+
+    /**
+     * フォーマットされた出勤時間を取得
+     * @return string|null
+     */
+    public function getFormattedClockInTime()
+    {
+        return self::normalizeTime($this->clock_in_time);
+    }
+
+    /**
+     * フォーマットされた退勤時間を取得
+     * @return string|null
+     */
+    public function getFormattedClockOutTime()
+    {
+        return self::normalizeTime($this->clock_out_time);
+    }
+
+    /**
+     * 休憩時間を計算
+     * @return string
+     */
+    public function calculateBreakTime()
+    {
+        try {
+            $breakRecords = BreakRecord::where('attendance_record_id', $this->id)->get();
+
+            $totalBreakMinutes = 0;
+            foreach ($breakRecords as $break) {
+                if ($break->start_time && $break->end_time) {
+                    // BreakRecordの時間フィールドは既にCarbonオブジェクトとしてキャストされている
+                    $totalBreakMinutes += $break->start_time->diffInMinutes($break->end_time);
+                }
+            }
+
+            $hours = intval($totalBreakMinutes / 60);
+            $minutes = $totalBreakMinutes % 60;
+
+            return sprintf('%d:%02d', $hours, $minutes);
+        } catch (\Exception $e) {
+            return '0:00';
+        }
+    }
+
+    /**
+     * 総勤務時間を計算
+     * @return string|null
+     */
+    public function calculateTotalWorkTime()
+    {
+        try {
+            if (!$this->clock_in_time || !$this->clock_out_time) {
+                return null;
+            }
+
+            // 時間の形式を正規化
+            $clockInTime = $this->getFormattedClockInTime();
+            $clockOutTime = $this->getFormattedClockOutTime();
+
+            if (!$clockInTime || !$clockOutTime) {
+                return null;
+            }
+
+            $clockIn = \Carbon\Carbon::createFromFormat('H:i', $clockInTime);
+            $clockOut = \Carbon\Carbon::createFromFormat('H:i', $clockOutTime);
+
+            $totalMinutes = $clockOut->diffInMinutes($clockIn);
+
+            // 休憩時間を差し引く
+            $breakTime = $this->calculateBreakTime();
+            if ($breakTime) {
+                $breakMinutes = self::parseTimeToMinutes($breakTime);
+                $totalMinutes -= $breakMinutes;
+            }
+
+            $hours = intval($totalMinutes / 60);
+            $minutes = $totalMinutes % 60;
+
+            return sprintf('%d:%02d', $hours, $minutes);
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * 指定ユーザーの勤怠記録を取得するスコープ
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $userId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeForUser($query, $userId)
+    {
+        return $query->where('user_id', $userId);
+    }
+
+    /**
+     * 指定月の勤怠記録を取得するスコープ
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $year
+     * @param int $month
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeForMonth($query, $year, $month)
+    {
+        return $query->whereYear('date', $year)
+                     ->whereMonth('date', $month)
+                     ->orderBy('date');
+    }
 }

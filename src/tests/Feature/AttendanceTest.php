@@ -61,6 +61,35 @@ class AttendanceTest extends TestCase
     }
 
     /**
+     * 6.出勤機能
+     * 出勤時刻が勤怠一覧画面で確認できる
+     */
+    public function test_出勤時刻が勤怠一覧画面で確認できる()
+    {
+        /** @var \App\Models\User $user */
+        $user = User::factory()->create();
+
+        // 出勤処理
+        $this->actingAs($user)->post('/attendance/clock-in');
+
+        // 勤怠一覧画面にアクセス
+        $response = $this->actingAs($user)->get('/attendance/list');
+
+        $response->assertStatus(200);
+
+        // 出勤時刻が表示されていることを確認
+        $attendance = AttendanceRecord::where('user_id', $user->id)
+            ->whereDate('date', today())
+            ->first();
+
+        $this->assertNotNull($attendance);
+        $this->assertNotNull($attendance->clock_in_time);
+
+        // 勤怠一覧画面に出勤時刻が表示されていることを確認
+        $response->assertSee($attendance->clock_in_time);
+    }
+
+    /**
      * 7.休憩機能
      * 休憩ボタンが正しく機能する
      */
@@ -195,6 +224,40 @@ class AttendanceTest extends TestCase
     }
 
     /**
+     * 7.休憩機能
+     * 休憩時刻が勤怠一覧画面で確認できる
+     */
+    public function test_休憩時刻が勤怠一覧画面で確認できる()
+    {
+        /** @var \App\Models\User $user */
+        $user = User::factory()->create();
+
+        // 出勤して休憩入・休憩戻
+        $this->actingAs($user)->post('/attendance/clock-in');
+        $this->actingAs($user)->post('/attendance/break-start');
+        $this->actingAs($user)->post('/attendance/break-end');
+
+        // 勤怠一覧画面にアクセス
+        $response = $this->actingAs($user)->get('/attendance/list');
+
+        $response->assertStatus(200);
+
+        // 休憩記録が作成されていることを確認
+        $breakRecord = BreakRecord::whereHas('attendanceRecord', function ($query) use ($user) {
+            $query->where('user_id', $user->id)
+                ->where('date', today());
+        })->first();
+
+        $this->assertNotNull($breakRecord);
+        $this->assertNotNull($breakRecord->start_time);
+        $this->assertNotNull($breakRecord->end_time);
+
+        // 勤怠一覧画面に休憩時刻が表示されていることを確認
+        $response->assertSee($breakRecord->start_time->format('H:i'));
+        $response->assertSee($breakRecord->end_time->format('H:i'));
+    }
+
+    /**
      * 8.退勤機能
      * 退勤ボタンが正しく機能する
      */
@@ -238,6 +301,36 @@ class AttendanceTest extends TestCase
         $afterResponse->assertSee('退勤済');
         $afterResponse->assertDontSee('type="submit"'); // ボタンが表示されないことを確認
         $afterResponse->assertDontSee('出勤中');
+    }
+
+    /**
+     * 8.退勤機能
+     * 退勤時刻が勤怠一覧画面で確認できる
+     */
+    public function test_退勤時刻が勤怠一覧画面で確認できる()
+    {
+        /** @var \App\Models\User $user */
+        $user = User::factory()->create();
+
+        // 出勤して退勤
+        $this->actingAs($user)->post('/attendance/clock-in');
+        $this->actingAs($user)->post('/attendance/clock-out');
+
+        // 勤怠一覧画面にアクセス
+        $response = $this->actingAs($user)->get('/attendance/list');
+
+        $response->assertStatus(200);
+
+        // 退勤時刻が設定されていることを確認
+        $attendance = AttendanceRecord::where('user_id', $user->id)
+            ->whereDate('date', today())
+            ->first();
+
+        $this->assertNotNull($attendance);
+        $this->assertNotNull($attendance->clock_out_time);
+
+        // 勤怠一覧画面に退勤時刻が表示されていることを確認
+        $response->assertSee($attendance->clock_out_time);
     }
 
     // 以下は実装する上で必要と考えた追加テスト

@@ -75,6 +75,10 @@ Route::post('/attendance/break-end', [App\Http\Controllers\AttendanceController:
     ->middleware('auth')
     ->name('attendance.break-end');
 
+Route::get('/attendance/list', [App\Http\Controllers\AttendanceListController::class, 'index'])
+    ->middleware('auth')
+    ->name('attendance.list');
+
 // 管理者
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', function () {
