@@ -79,6 +79,12 @@ Route::get('/attendance/list', [App\Http\Controllers\AttendanceListController::c
     ->middleware('auth')
     ->name('attendance.list');
 
+// 申請一覧画面
+Route::get('/stamp_correction_request/list', [App\Http\Controllers\StampCorrectionRequestListController::class, 'index'])
+    ->middleware('admin_or_user')
+    ->name('stamp_correction_request.list');
+
+
 // 管理者
 Route::prefix('admin')->name('admin.')->group(function () {
     // ログイン関連は認証なしでアクセス可能

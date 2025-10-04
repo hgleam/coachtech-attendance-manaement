@@ -25,7 +25,7 @@
                     {{-- 管理者用ナビゲーション --}}
                     <a href='{{ route("admin.staff.list") }}' class='header__nav-link'>スタッフ一覧</a>
                     <a href='{{ route("admin.attendance.list") }}' class='header__nav-link'>勤怠一覧</a>
-                    <a href='{{ route("admin.stamp_correction_request.list") }}' class='header__nav-link'>申請一覧</a>
+                    <a href='{{ route("stamp_correction_request.list") }}' class='header__nav-link'>申請一覧</a>
                     <form method='POST' action='{{ route("admin.logout") }}' class='header__nav-form'>
                         @csrf
                         <button type='submit' class='header__nav-link header__nav-link--button'>ログアウト</button>
