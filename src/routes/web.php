@@ -44,14 +44,6 @@ Route::get('/attendance', function () {
     return view('attendances.index');
 })->name('attendance.index');
 
-Route::get('/attendance/list', function () {
-    return view('attendances.list');
-})->name('attendance.list');
-
-Route::get('/attendance/{id}', function ($id) {
-    // NOTE: 承認待ちのデザインも確認できるよう、両方のパターンを含める
-    return view('attendances.show', ['id' => $id]);
-})->name('attendance.show');
 Route::get('/attendance', [App\Http\Controllers\AttendanceController::class, 'index'])
     ->middleware('auth')
     ->name('attendance.index');
@@ -78,6 +70,14 @@ Route::post('/attendance/break-end', [App\Http\Controllers\AttendanceController:
 Route::get('/attendance/list', [App\Http\Controllers\AttendanceListController::class, 'index'])
     ->middleware('auth')
     ->name('attendance.list');
+
+Route::get('/attendance/{id}', [App\Http\Controllers\AttendanceDetailController::class, 'show'])
+    ->middleware('admin_or_user')
+    ->name('attendance.show');
+
+Route::post('/attendance/{id}/correction', [App\Http\Controllers\AttendanceDetailController::class, 'correction'])
+    ->middleware('admin_or_user')
+    ->name('attendance.correction');
 
 // 申請一覧画面
 Route::get('/stamp_correction_request/list', [App\Http\Controllers\StampCorrectionRequestListController::class, 'index'])
