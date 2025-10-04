@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
 <div class='staff-list-page'>
@@ -16,37 +16,13 @@
                 </tr>
             </thead>
             <tbody class='staff-list-card__body'>
-                {{-- ダミーデータ --}}
+                @foreach($users as $user)
                 <tr>
-                    <td>西 伶奈</td>
-                    <td>reina.n@coachtech.com</td>
-                    <td><a href='#' class='staff-list-card__detail-link'>詳細</a></td>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td><a href='{{ route("admin.attendance.staff", $user->id) }}' class='staff-list-card__detail-link'>詳細</a></td>
                 </tr>
-                <tr>
-                    <td>山田 太郎</td>
-                    <td>taro.y@coachtech.com</td>
-                    <td><a href='#' class='staff-list-card__detail-link'>詳細</a></td>
-                </tr>
-                <tr>
-                    <td>増田 一世</td>
-                    <td>issei.m@coachtech.com</td>
-                    <td><a href='#' class='staff-list-card__detail-link'>詳細</a></td>
-                </tr>
-                <tr>
-                    <td>山本 敬吉</td>
-                    <td>keikichi.y@coachtech.com</td>
-                    <td><a href='#' class='staff-list-card__detail-link'>詳細</a></td>
-                </tr>
-                <tr>
-                    <td>秋田 朋美</td>
-                    <td>tomomi.a@coachtech.com</td>
-                    <td><a href='#' class='staff-list-card__detail-link'>詳細</a></td>
-                </tr>
-                <tr>
-                    <td>中西 教夫</td>
-                    <td>norio.n@coachtech.com</td>
-                    <td><a href='#' class='staff-list-card__detail-link'>詳細</a></td>
-                </tr>
+                @endforeach
             </tbody>
         </table>
     </div>

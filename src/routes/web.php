@@ -99,6 +99,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/attendance/staff/{id}', function ($id) {
         return view('admin.attendances.staff', ['id' => $id]);
     })->name('attendance.staff');
+    Route::get('/staff/list', [App\Http\Controllers\Admin\StaffListController::class, 'index'])->name('staff.list');
 
     Route::get('/attendance/list', [App\Http\Controllers\Admin\AttendanceListController::class, 'index'])->name('attendance.list');
 
