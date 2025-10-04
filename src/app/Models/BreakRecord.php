@@ -13,6 +13,9 @@ class BreakRecord extends Model
 {
     use HasFactory;
 
+    /**
+     * フィルター対象
+     */
     protected $fillable = [
         'attendance_record_id',
         'start_time',

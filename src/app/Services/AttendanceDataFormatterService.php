@@ -39,4 +39,30 @@ class AttendanceDataFormatterService
 
         return $data;
     }
+
+    /**
+     * 管理者用勤怠データを整形
+     * @param \Illuminate\Database\Eloquent\Collection $attendanceRecords
+     * @param \Illuminate\Database\Eloquent\Collection $allUsers
+     * @return array
+     */
+    public function formatAdminAttendanceData($attendanceRecords, $allUsers)
+    {
+        $data = [];
+
+        foreach ($allUsers as $user) {
+            $attendance = $attendanceRecords->where('user_id', $user->id)->first();
+
+            $data[] = [
+                'user' => $user,
+                'attendance' => $attendance,
+                'clock_in_time' => $attendance ? $attendance->clock_in_time : null,
+                'clock_out_time' => $attendance ? $attendance->clock_out_time : null,
+                'break_time' => $attendance ? $attendance->calculateBreakTime() : null,
+                'total_work_time' => $attendance ? $attendance->calculateTotalWorkTime() : null,
+            ];
+        }
+
+        return $data;
+    }
 }

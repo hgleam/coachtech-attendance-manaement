@@ -306,7 +306,6 @@ class AttendanceRecord extends Model
             $totalBreakMinutes = 0;
             foreach ($breakRecords as $break) {
                 if ($break->start_time && $break->end_time) {
-                    // BreakRecordの時間フィールドは既にCarbonオブジェクトとしてキャストされている
                     $totalBreakMinutes += $break->start_time->diffInMinutes($break->end_time);
                 }
             }
@@ -383,5 +382,155 @@ class AttendanceRecord extends Model
         return $query->whereYear('date', $year)
                      ->whereMonth('date', $month)
                      ->orderBy('date');
+    }
+
+    /**
+     * 承認済みかどうかを判定
+     * @return bool
+     */
+    public function isApproved()
+    {
+        return $this->approval_status === 'APPROVED';
+    }
+
+    /**
+     * 申請中かどうかを判定
+     * @return bool
+     */
+    public function isPending()
+    {
+        return $this->approval_status === 'PENDING';
+    }
+
+    /**
+     * 編集可能かどうかを判定（管理者用）
+     * @return bool
+     */
+    public function canEditAsAdmin()
+    {
+        return !$this->isApproved();
+    }
+
+    /**
+     * 編集可能かどうかを判定（一般ユーザー用）
+     * @return bool
+     */
+    public function canEditAsUser()
+    {
+        return !$this->isPending();
+    }
+
+    /**
+     * 編集可能かどうかを判定（現在のユーザーに応じて）
+     * @return bool
+     */
+    public function canEdit()
+    {
+        if (\App\Helpers\AuthHelper::isAdmin()) {
+            return $this->canEditAsAdmin();
+        } else {
+            return $this->canEditAsUser();
+        }
+    }
+
+    /**
+     * 現在のユーザーがこの勤怠記録にアクセス可能か判定
+     * @return bool
+     */
+    public function canAccess()
+    {
+        if (\App\Helpers\AuthHelper::isAdmin()) {
+            return true; // 管理者は全勤怠記録にアクセス可能
+        }
+
+        return $this->user_id === \Illuminate\Support\Facades\Auth::id(); // 一般ユーザーは自分の勤怠記録のみ
+    }
+
+    /**
+     * 現在のユーザーがこの勤怠記録を修正可能か判定
+     * @return bool
+     */
+    public function canModify()
+    {
+        if (\App\Helpers\AuthHelper::isAdmin()) {
+            return true; // 管理者は全勤怠記録を修正可能
+        }
+
+        return $this->user_id === \Illuminate\Support\Facades\Auth::id(); // 一般ユーザーは自分の勤怠記録のみ
+    }
+
+    /**
+     * 修正申請を適用
+     * @param \Illuminate\Http\Request $request
+     * @param bool $isAdmin
+     * @return void
+     */
+    public function applyCorrection($request, $isAdmin)
+    {
+        DB::transaction(function () use ($request, $isAdmin) {
+            // 勤怠記録の更新
+            $this->updateAttendanceData($request, $isAdmin);
+
+            // 休憩記録の更新
+            $this->updateBreakRecords($request);
+        });
+    }
+
+    /**
+     * 勤怠記録データを更新
+     * @param \Illuminate\Http\Request $request
+     * @param bool $isAdmin
+     * @return void
+     */
+    private function updateAttendanceData($request, $isAdmin)
+    {
+        $updateData = [
+            'clock_in_time' => $request->clock_in_time,
+            'clock_out_time' => $request->clock_out_time,
+            'remark' => $request->remark,
+            'applied_at' => now()
+        ];
+
+        if ($isAdmin) {
+            $updateData['approval_status'] = 'APPROVED';
+        } else {
+            $updateData['approval_status'] = 'PENDING';
+        }
+
+        $this->update($updateData);
+    }
+
+    /**
+     * 休憩記録を更新
+     * @param \Illuminate\Http\Request $request
+     * @return void
+     */
+    private function updateBreakRecords($request)
+    {
+        // 既存の休憩記録を削除
+        $this->breakRecords()->delete();
+
+        // 新しい休憩記録を作成
+        $breakStartTimes = $request->break_start_time ?? [];
+        $breakEndTimes = $request->break_end_time ?? [];
+
+        for ($i = 0; $i < count($breakStartTimes); $i++) {
+            $startTime = $breakStartTimes[$i] ?? null;
+            $endTime = $breakEndTimes[$i] ?? null;
+
+            // 空の休憩時間はスキップ
+            if (empty($startTime) && empty($endTime)) {
+                continue;
+            }
+
+            // 開始時間または終了時間のどちらかが入力されている場合は作成
+            if (!empty($startTime) || !empty($endTime)) {
+                \App\Models\BreakRecord::create([
+                    'attendance_record_id' => $this->id,
+                    'start_time' => $startTime ?: null,
+                    'end_time' => $endTime ?: null
+                ]);
+            }
+        }
     }
 }

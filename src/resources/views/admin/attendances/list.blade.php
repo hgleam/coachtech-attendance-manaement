@@ -1,23 +1,24 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
-<div class='admin-attendance-list-page'>
-    <div class='admin-attendance-list-page__header'>
-        <h2 class='admin-attendance-list-page__title'>2023年6月1日の勤怠</h2>
+<div class='attendance-list-page'>
+    <div class='attendance-list-page__header'>
+        <h2 class='attendance-list-page__title'>{{ $currentDate->format('Y年n月j日') }}の勤怠</h2>
     </div>
 
-    <div class='date-navigator'>
-        <a href='#' class='date-navigator__link'>&larr; 前日</a>
-        <span class='date-navigator__current'>
-            <i class='date-navigator__icon'>📅</i>
-            2023/06/01
+    <div class='month-navigator'>
+        <a href='{{ route("admin.attendance.list", ["date" => $prevDate]) }}' class='month-navigator__link'>&larr; 前日</a>
+        <span class='month-navigator__current'>
+            <span class='calendar-icon' onclick='openDatePicker()'>📅</span>
+            {{ $currentDate->format('Y年n月j日') }}
+            <input type='date' id='date-picker' value='{{ $currentDate->format("Y-m-d") }}' class='date-picker-hidden'>
         </span>
-        <a href='#' class='date-navigator__link'>翌日 &rarr;</a>
+        <a href='{{ route("admin.attendance.list", ["date" => $nextDate]) }}' class='month-navigator__link'>翌日 &rarr;</a>
     </div>
 
-    <div class='admin-attendance-list-card'>
-        <table class='admin-attendance-list-card__table'>
-            <thead class='admin-attendance-list-card__header'>
+    <div class='attendance-list-card'>
+        <table class='attendance-list-card__table'>
+            <thead class='attendance-list-card__header'>
                 <tr>
                     <th>名前</th>
                     <th>出勤</th>
@@ -27,58 +28,62 @@
                     <th>詳細</th>
                 </tr>
             </thead>
-            <tbody class='admin-attendance-list-card__body'>
-                {{-- ダミーデータ --}}
+            <tbody class='attendance-list-card__body'>
+                @foreach ($attendanceData as $data)
                 <tr>
-                    <td>山田 太郎</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href='#' class='admin-attendance-list-card__detail-link'>詳細</a></td>
+                    <td>{{ $data['user']->name }}</td>
+                    <td>{{ $data['clock_in_time'] ?? '' }}</td>
+                    <td>{{ $data['clock_out_time'] ?? '' }}</td>
+                    <td>{{ $data['break_time'] ?? '' }}</td>
+                    <td>{{ $data['total_work_time'] ?? '' }}</td>
+                    <td>
+                        @if ($data['attendance'])
+                            <a href='{{ route("attendance.show", $data["attendance"]->id) }}'>詳細</a>
+                        @else
+                            <span>-</span>
+                        @endif
+                    </td>
                 </tr>
-                <tr>
-                    <td>西 伶奈</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href='#' class='admin-attendance-list-card__detail-link'>詳細</a></td>
-                </tr>
-                <tr>
-                    <td>増田 一世</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href='#' class='admin-attendance-list-card__detail-link'>詳細</a></td>
-                </tr>
-                <tr>
-                    <td>山本 敬吉</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href='#' class='admin-attendance-list-card__detail-link'>詳細</a></td>
-                </tr>
-                <tr>
-                    <td>秋田 朋美</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href='#' class='admin-attendance-list-card__detail-link'>詳細</a></td>
-                </tr>
-                <tr>
-                    <td>中西 教夫</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href='#' class='admin-attendance-list-card__detail-link'>詳細</a></td>
-                </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
 </div>
+
+<script>
+// 日付ピッカーの開閉
+function openDatePicker() {
+    const datePicker = document.getElementById('date-picker');
+    const calendarIcon = document.querySelector('.calendar-icon');
+
+    // カレンダーアイコンの位置を取得
+    const rect = calendarIcon.getBoundingClientRect();
+
+    // 日付入力フィールドをカレンダーアイコンの位置に配置
+    datePicker.style.position = 'fixed';
+    datePicker.style.left = rect.left + 'px';
+    datePicker.style.top = rect.top + 'px';
+    datePicker.style.zIndex = '9999';
+    datePicker.style.opacity = '0';
+    datePicker.style.pointerEvents = 'auto';
+    datePicker.style.width = '1px';
+    datePicker.style.height = '1px';
+
+    // カレンダーを開く
+    datePicker.showPicker();
+}
+
+// 日付ピッカーの変更時に勤怠一覧画面に遷移
+document.addEventListener('DOMContentLoaded', function() {
+    const datePicker = document.getElementById('date-picker');
+
+    datePicker.addEventListener('change', function() {
+        const selectedDate = this.value;
+        if (selectedDate) {
+            window.location.href = '{{ route("admin.attendance.list") }}?date=' + selectedDate;
+        }
+    });
+});
+</script>
+
 @endsection
