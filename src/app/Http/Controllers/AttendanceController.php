@@ -23,7 +23,7 @@ class AttendanceController extends Controller
 
         $data = [
             'currentWorkState' => $currentWorkState,
-            'workStateDisplay' => Attendance::WORK_STATES[$currentWorkState],
+            'workStateDisplay' => Attendance::getWorkStateDisplay($currentWorkState),
             'todayRecord' => $todayRecord,
             'currentTime' => now(),
         ];

@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\AttendanceRecord;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Constants\Attendance;
 
 /**
  * 勤怠記録ファクトリ
@@ -34,7 +35,13 @@ class AttendanceRecordFactory extends Factory
             'date' => $this->faker->date('Y-m-d'),
             'clock_in_time' => $clockInTime,
             'clock_out_time' => $clockOutTime,
-            'work_state' => $this->faker->randomElement(['BEFORE_WORK', 'WORKING', 'ON_BREAK', 'AFTER_LEAVE']),
+            'work_state' => $this->faker->randomElement(
+                [
+                    Attendance::BEFORE_WORK,
+                    Attendance::WORKING,
+                    Attendance::ON_BREAK,
+                    Attendance::AFTER_LEAVE
+                ]),
             'approval_status' => null,
             'applied_at' => null,
             'remark' => null,

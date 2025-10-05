@@ -73,7 +73,7 @@ class AttendanceRecord extends Model
      */
     public function getWorkStateDisplayAttribute(): string
     {
-        return Attendance::WORK_STATES[$this->work_state] ?? $this->work_state;
+        return Attendance::getWorkStateDisplay($this->work_state);
     }
 
     /**
@@ -82,7 +82,7 @@ class AttendanceRecord extends Model
      */
     public function getApprovalStatusDisplayAttribute(): string
     {
-        return Attendance::APPROVAL_STATUSES[$this->approval_status] ?? $this->approval_status;
+        return Attendance::getApprovalStatusDisplay($this->approval_status);
     }
 
     /**
@@ -107,7 +107,7 @@ class AttendanceRecord extends Model
         $record = self::getTodayRecord($userId);
 
         if (!$record) {
-            return 'BEFORE_WORK';
+            return Attendance::BEFORE_WORK;
         }
 
         return $record->work_state;
@@ -124,7 +124,7 @@ class AttendanceRecord extends Model
 
         // 既に勤怠記録がある場合はエラー
         if ($todayRecord) {
-            if ($todayRecord->work_state === 'AFTER_LEAVE') {
+            if ($todayRecord->work_state === Attendance::AFTER_LEAVE) {
                 return ['success' => false, 'error' => '本日は既に退勤済みです'];
             } else {
                 return ['success' => false, 'error' => '本日は既に出勤済みです'];
@@ -135,7 +135,7 @@ class AttendanceRecord extends Model
             'user_id' => $userId,
             'date' => today(),
             'clock_in_time' => now()->format('H:i'),
-            'work_state' => 'WORKING',
+            'work_state' => Attendance::WORKING,
         ]);
 
         return ['success' => true, 'message' => '出勤しました'];
@@ -153,18 +153,18 @@ class AttendanceRecord extends Model
         }
 
         // 既に退勤済みの場合はエラー
-        if ($this->work_state === 'AFTER_LEAVE') {
+        if ($this->work_state === Attendance::AFTER_LEAVE) {
             return ['success' => false, 'error' => '本日は既に退勤済みです'];
         }
 
         // 勤務外の場合はエラー
-        if ($this->work_state === 'BEFORE_WORK') {
+        if ($this->work_state === Attendance::BEFORE_WORK) {
             return ['success' => false, 'error' => '出勤していないため退勤できません'];
         }
 
         DB::transaction(function () {
             // 休憩中の場合は休憩を終了
-            if ($this->work_state === 'ON_BREAK') {
+            if ($this->work_state === Attendance::ON_BREAK) {
                 $activeBreak = BreakRecord::where('attendance_record_id', $this->id)
                     ->whereNull('end_time')
                     ->first();
@@ -190,7 +190,7 @@ class AttendanceRecord extends Model
     public function startBreak(): array
     {
         // 出勤していない場合はエラー
-        if (!$this->exists || $this->work_state !== 'WORKING') {
+        if (!$this->exists || $this->work_state !== Attendance::WORKING) {
             return ['success' => false, 'error' => '出勤していないため休憩できません'];
         }
 
@@ -202,7 +202,7 @@ class AttendanceRecord extends Model
             ]);
 
             // 勤務状態を休憩中に変更
-            $this->update(['work_state' => 'ON_BREAK']);
+            $this->update(['work_state' => Attendance::ON_BREAK]);
         });
 
         return ['success' => true, 'message' => '休憩を開始しました'];
@@ -220,7 +220,7 @@ class AttendanceRecord extends Model
         }
 
         // 休憩中でない場合はエラー
-        if ($this->work_state !== 'ON_BREAK') {
+        if ($this->work_state !== Attendance::ON_BREAK) {
             return ['success' => false, 'error' => '休憩中ではないため休憩終了できません'];
         }
 
@@ -235,7 +235,7 @@ class AttendanceRecord extends Model
             }
 
             // 勤務状態を出勤中に変更
-            $this->update(['work_state' => 'WORKING']);
+            $this->update(['work_state' => Attendance::WORKING]);
         });
 
         return ['success' => true, 'message' => '休憩を終了しました'];
@@ -390,7 +390,7 @@ class AttendanceRecord extends Model
      */
     public function isApproved()
     {
-        return $this->approval_status === 'APPROVED';
+        return $this->approval_status === Attendance::APPROVED;
     }
 
     /**
@@ -399,7 +399,7 @@ class AttendanceRecord extends Model
      */
     public function isPending()
     {
-        return $this->approval_status === 'PENDING';
+        return $this->approval_status === Attendance::PENDING;
     }
 
     /**
@@ -423,7 +423,7 @@ class AttendanceRecord extends Model
         }
 
         // 勤務中（退勤していない）場合は編集不可
-        if ($this->work_state === 'WORKING') {
+        if ($this->work_state !== Attendance::AFTER_LEAVE) {
             return false;
         }
 
@@ -466,7 +466,17 @@ class AttendanceRecord extends Model
             return true; // 管理者は全勤怠記録を修正可能
         }
 
-        return $this->user_id === \Illuminate\Support\Facades\Auth::id(); // 一般ユーザーは自分の勤怠記録のみ
+        // 一般ユーザーは自分の勤怠記録のみ
+        if ($this->user_id !== \Illuminate\Support\Facades\Auth::id()) {
+            return false;
+        }
+
+        // 退勤していない勤怠記録は修正不可
+        if ($this->work_state !== Attendance::AFTER_LEAVE) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -502,9 +512,9 @@ class AttendanceRecord extends Model
         ];
 
         if ($isAdmin) {
-            $updateData['approval_status'] = 'APPROVED';
+            $updateData['approval_status'] = Attendance::APPROVED;
         } else {
-            $updateData['approval_status'] = 'PENDING';
+            $updateData['approval_status'] = Attendance::PENDING;
         }
 
         $this->update($updateData);

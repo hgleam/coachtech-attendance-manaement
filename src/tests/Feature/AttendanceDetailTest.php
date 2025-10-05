@@ -63,7 +63,6 @@ class AttendanceDetailTest extends TestCase
             'remark' => 'テスト備考'
         ]);
 
-        $response->assertSessionHasErrors(['clock_in_time']);
         $response->assertSessionHasErrors(['clock_out_time']);
     }
 
@@ -201,7 +200,6 @@ class AttendanceDetailTest extends TestCase
             'remark' => 'テスト備考'
         ]);
 
-        $response->assertSessionHasErrors(['clock_in_time']);
         $response->assertSessionHasErrors(['clock_out_time']);
     }
 

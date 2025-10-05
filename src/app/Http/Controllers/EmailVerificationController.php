@@ -27,7 +27,7 @@ class EmailVerificationController extends Controller
 
         $request->user()->sendEmailVerificationNotification();
 
-        return back()->with('status', 'verification-link-sent');
+        return back()->with('status', 'メール認証の再送信が完了しました。');
     }
 
     /**
@@ -43,6 +43,6 @@ class EmailVerificationController extends Controller
             event(new Verified($request->user()));
         }
 
-        return redirect()->intended('/')->with('status', 'verification-success');
+        return redirect()->intended('/')->with('status', 'メール認証が完了しました。');
     }
 }

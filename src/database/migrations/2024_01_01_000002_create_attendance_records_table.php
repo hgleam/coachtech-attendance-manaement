@@ -21,8 +21,8 @@ return new class extends Migration
             $table->date('date');
             $table->time('clock_in_time');
             $table->time('clock_out_time')->nullable();
-            $table->enum('work_state', ['BEFORE_WORK', 'WORKING', 'ON_BREAK', 'AFTER_LEAVE']);
-            $table->enum('approval_status', array_keys(Attendance::APPROVAL_STATUSES))->nullable();
+            $table->enum('work_state', [Attendance::BEFORE_WORK, Attendance::WORKING, Attendance::ON_BREAK, Attendance::AFTER_LEAVE]);
+            $table->enum('approval_status', [Attendance::PENDING, Attendance::APPROVED, Attendance::REJECTED])->nullable();
             $table->timestamp('applied_at')->nullable()->comment('修正申請日時');
             $table->text('remark')->nullable();
             $table->time('total_work_time')->nullable()->comment('総勤務時間');

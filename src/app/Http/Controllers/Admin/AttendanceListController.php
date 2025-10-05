@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\AttendanceListRequest;
 use App\Models\AttendanceRecord;
 use App\Models\User;
 use App\Services\AttendanceDataFormatterService;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 /**
@@ -16,12 +16,15 @@ class AttendanceListController extends Controller
 {
     /**
      * 管理者用勤怠一覧画面を表示
+     * @param AttendanceListRequest $request
+     * @return \Illuminate\Contracts\View\View
+     * @throws \Exception
      */
-    public function index(Request $request)
+    public function index(AttendanceListRequest $request)
     {
         try {
             // 日付パラメータを取得（デフォルトは今日）
-            $date = $request->get('date', now()->format('Y-m-d'));
+            $date = $request->getDate();
             $currentDate = Carbon::createFromFormat('Y-m-d', $date);
 
             // 前日・翌日のリンク用

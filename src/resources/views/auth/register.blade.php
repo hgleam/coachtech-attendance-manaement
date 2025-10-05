@@ -5,7 +5,7 @@
     <div class='register-page__body'>
         <h2 class='register-page__title'>会員登録</h2>
 
-        <form method='POST' action='{{ route("register") }}' class='register-form' novalidate>
+        <form method='POST' action='{{ route("register") }}' class='register-form' novalidate autocomplete='off'>
             @csrf
 
             <div class='register-form__group'>

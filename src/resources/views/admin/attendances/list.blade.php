@@ -2,6 +2,13 @@
 
 @section('content')
 <div class='attendance-list-page'>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            @foreach ($errors->all() as $error)
+                {{ $error }}
+            @endforeach
+        </div>
+    @endif
     <div class='attendance-list-page__header'>
         <h2 class='attendance-list-page__title'>{{ $currentDate->format('Y年n月j日') }}の勤怠</h2>
     </div>
@@ -38,7 +45,7 @@
                     <td>{{ $data['total_work_time'] ?? '' }}</td>
                     <td>
                         @if ($data['attendance'])
-                            <a href='{{ route("attendance.show", $data["attendance"]->id) }}'>詳細</a>
+                            <a href='{{ route("admin.attendance.show", $data["attendance"]->id) }}'>詳細</a>
                         @else
                             <span>-</span>
                         @endif

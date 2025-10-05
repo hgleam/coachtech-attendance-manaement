@@ -20,7 +20,6 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// 仮ルーティング
 // 一般ユーザー
 Route::get('/register', [App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])
     ->name('register');

@@ -1,3 +1,7 @@
+@php
+use App\Constants\Attendance;
+@endphp
+
 @extends('layouts.app')
 
 @section('content')
@@ -20,7 +24,7 @@
             </div>
         @endif
 
-        <form action="{{ route('attendance.correction', $attendance->id) }}" method="POST" class='attendance-detail-form'>
+        <form action="{{ session()->has('admin_id') ? route('admin.attendance.correction', $attendance->id) : route('attendance.correction', $attendance->id) }}" method="POST" class='attendance-detail-form'>
             @csrf
 
             <div class='attendance-detail-form__section'>
@@ -180,11 +184,11 @@
                 </div>
             @else
                 <div class='attendance-detail-form__error-message'>
-                    @if($attendance->work_state === 'WORKING')
+                    @if($attendance->work_state === Attendance::WORKING)
                         *勤務中のため修正はできません。退勤完了後に修正が可能です。
                     @elseif($attendance->isPending())
                         *承認待ちのため修正はできません。
-                    @elseif($attendance->work_state !== 'AFTER_LEAVE')
+                    @elseif($attendance->work_state !== Attendance::AFTER_LEAVE)
                         *退勤完了後の勤怠記録のみ修正が可能です。
                     @endif
                 </div>

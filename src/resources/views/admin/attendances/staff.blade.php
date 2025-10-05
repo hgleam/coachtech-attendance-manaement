@@ -2,17 +2,23 @@
 
 @section('content')
 <div class='staff-attendance-page'>
+    @if (isset($errorMessage) && $errorMessage)
+        <div class="alert alert-danger">
+            {{ $errorMessage }}
+        </div>
+    @endif
+
     <div class='staff-attendance-page__header'>
         <h2 class='staff-attendance-page__title'>{{ $user->name }}さんの勤怠</h2>
     </div>
 
     <div class='month-navigator'>
-        <a href='{{ route("admin.attendance.staff", ["id" => $user->id, "year" => $prevMonth->year, "month" => $prevMonth->month]) }}' class='month-navigator__link'>&larr; 前月</a>
+        <a href='{{ route("admin.attendance.staff", ["id" => $user->id, "month" => $prevMonth->format("Y-m")]) }}' class='month-navigator__link'>&larr; 前月</a>
         <span class='month-navigator__current'>
             <i class='month-navigator__icon'>📅</i>
             {{ $currentMonth->format('Y/m') }}
         </span>
-        <a href='{{ route("admin.attendance.staff", ["id" => $user->id, "year" => $nextMonth->year, "month" => $nextMonth->month]) }}' class='month-navigator__link'>翌月 &rarr;</a>
+        <a href='{{ route("admin.attendance.staff", ["id" => $user->id, "month" => $nextMonth->format("Y-m")]) }}' class='month-navigator__link'>翌月 &rarr;</a>
     </div>
 
     <div class='staff-attendance-card'>
@@ -37,7 +43,7 @@
                     <td>{{ $data['total_work_time'] }}</td>
                     <td>
                         @if($data['attendance'])
-                            <a href='{{ route("attendance.show", $data["attendance"]->id) }}' class='staff-attendance-card__detail-link'>詳細</a>
+                            <a href='{{ route("admin.attendance.show", $data["attendance"]->id) }}' class='staff-attendance-card__detail-link'>詳細</a>
                         @else
                             <span>-</span>
                         @endif

@@ -73,7 +73,7 @@ class AdminStaffAttendanceTest extends TestCase
         ]);
 
         // 9月の勤怠画面にアクセス
-        $response = $this->get("/admin/attendance/staff/{$user->id}?year=2025&month=9");
+        $response = $this->get("/admin/attendance/staff/{$user->id}?month=2025-09");
 
         // ユーザー名が表示される
         $response->assertSee('西 伶奈さんの勤怠');
@@ -119,13 +119,13 @@ class AdminStaffAttendanceTest extends TestCase
         ]);
 
         // 9月の勤怠画面にアクセス
-        $response = $this->get("/admin/attendance/staff/{$user->id}?year=2025&month=9");
+        $response = $this->get("/admin/attendance/staff/{$user->id}?month=2025-09");
 
         // 前月（8月）へのリンクが表示される
-        $response->assertSee('/admin/attendance/staff/' . $user->id . '?year=2025&month=8');
+        $response->assertSee('/admin/attendance/staff/' . $user->id . '?month=2025-08');
 
         // 前月のリンクをクリック
-        $response = $this->get("/admin/attendance/staff/{$user->id}?year=2025&month=8");
+        $response = $this->get("/admin/attendance/staff/{$user->id}?month=2025-08");
 
         // 前月の情報が表示される
         $response->assertSee('2025/08');
@@ -163,13 +163,13 @@ class AdminStaffAttendanceTest extends TestCase
         ]);
 
         // 9月の勤怠画面にアクセス
-        $response = $this->get("/admin/attendance/staff/{$user->id}?year=2025&month=9");
+        $response = $this->get("/admin/attendance/staff/{$user->id}?month=2025-09");
 
         // 翌月（10月）へのリンクが表示される
-        $response->assertSee('/admin/attendance/staff/' . $user->id . '?year=2025&month=10');
+        $response->assertSee('/admin/attendance/staff/' . $user->id . '?month=2025-10');
 
         // 翌月のリンクをクリック
-        $response = $this->get("/admin/attendance/staff/{$user->id}?year=2025&month=10");
+        $response = $this->get("/admin/attendance/staff/{$user->id}?month=2025-10");
 
         // 翌月の情報が表示される
         $response->assertSee('2025/10');
@@ -207,7 +207,7 @@ class AdminStaffAttendanceTest extends TestCase
         ]);
 
         // 9月の勤怠画面にアクセス
-        $response = $this->get("/admin/attendance/staff/{$user->id}?year=2025&month=9");
+        $response = $this->get("/admin/attendance/staff/{$user->id}?month=2025-09");
 
         // 詳細リンクが表示される
         $response->assertSee('/attendance/' . $attendance->id);
@@ -328,7 +328,7 @@ class AdminStaffAttendanceTest extends TestCase
         ]);
 
         // 8月の勤怠画面にアクセス
-        $response = $this->get("/admin/attendance/staff/{$user->id}?year=2025&month=8");
+        $response = $this->get("/admin/attendance/staff/{$user->id}?month=2025-08");
 
         // 8月が表示される
         $response->assertSee('2025/08');
@@ -481,7 +481,7 @@ class AdminStaffAttendanceTest extends TestCase
         ]);
 
         // 8月のCSV出力をリクエスト
-        $response = $this->get("/admin/attendance/staff/{$user->id}/csv?year=2025&month=8");
+        $response = $this->get("/admin/attendance/staff/{$user->id}/csv?month=2025-08");
 
         // CSVレスポンスが返される
         $response->assertStatus(200);

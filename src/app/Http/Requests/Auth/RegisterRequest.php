@@ -31,10 +31,22 @@ class RegisterRequest extends FormRequest
             'name' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'min:8'],
-            'password_confirmation' => ['required', 'same:password'],
+            'password_confirmation' => ['required', 'min:8', 'same:password'],
         ];
     }
 
+
+    /**
+     * バリデーションメッセージ
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'password_confirmation.min' => 'パスワード確認は8文字以上で入力してください',
+        ];
+    }
 
     /**
      * バリデーションエラーのカスタム属性を取得

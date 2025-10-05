@@ -27,21 +27,13 @@ class AttendanceUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'clock_in_time' => ['required', function ($attribute, $value, $fail) {
-                if (!preg_match('/^\d{2}:\d{2}(:\d{2})?$/', $value)) {
-                    $fail('出勤時間の形式が正しくありません');
-                }
-            }],
-            'clock_out_time' => ['required', function ($attribute, $value, $fail) {
-                if (!preg_match('/^\d{2}:\d{2}(:\d{2})?$/', $value)) {
-                    $fail('退勤時間の形式が正しくありません');
-                }
-            }],
+            'clock_in_time' => ['required'],
+            'clock_out_time' => ['required'],
             'break_start_time' => ['array'],
-            'break_start_time.*' => ['nullable', 'date_format:H:i'],
+            'break_start_time.*' => ['nullable'],
             'break_end_time' => ['array'],
-            'break_end_time.*' => ['nullable', 'date_format:H:i'],
-            'remark' => ['required', 'string', 'max:1000']
+            'break_end_time.*' => ['nullable'],
+            'remark' => ['required', 'string']
         ];
     }
 
@@ -78,7 +70,7 @@ class AttendanceUpdateRequest extends FormRequest
         $clockOutTimeFormatted = $this->formatTimeForComparison($clockOutTime);
 
         if ($clockInTimeFormatted >= $clockOutTimeFormatted) {
-            $validator->errors()->add('clock_in_time', '出勤時間もしくは退勤時間が不適切な値です');
+            // 優先順位に基づいて1つのエラーメッセージのみを表示
             $validator->errors()->add('clock_out_time', '出勤時間もしくは退勤時間が不適切な値です');
         }
     }
@@ -139,24 +131,28 @@ class AttendanceUpdateRequest extends FormRequest
         $breakStartTimeFormatted = $this->formatTimeForComparison($breakStartTime);
         $breakEndTimeFormatted = $this->formatTimeForComparison($breakEndTime);
 
-        // 休憩開始時間が出勤時間より前の場合
-        if ($breakStartTimeFormatted < $clockInTimeFormatted) {
-            $validator->errors()->add("break_start_time.{$index}", '休憩時間が不適切な値です');
-        }
-
-        // 休憩開始時間が退勤時間より後の場合
-        if ($breakStartTimeFormatted >= $clockOutTimeFormatted) {
-            $validator->errors()->add("break_start_time.{$index}", '休憩時間が不適切な値です');
-        }
-
-        // 休憩終了時間が退勤時間より後の場合
-        if ($breakEndTimeFormatted > $clockOutTimeFormatted) {
-            $validator->errors()->add("break_end_time.{$index}", '休憩時間もしくは退勤時間が不適切な値です');
-        }
-
-        // 休憩終了時間が休憩開始時間より前の場合（同じ時間は許可）
+        // 優先順位に基づいて1つのエラーメッセージのみを表示
+        // 1. 休憩時間の論理チェック（最も重要）
         if ($breakEndTimeFormatted < $breakStartTimeFormatted) {
             $validator->errors()->add("break_end_time.{$index}", '休憩時間が不適切な値です');
+            return;
+        }
+
+        // 2. 出勤時間との整合性チェック
+        if ($breakStartTimeFormatted < $clockInTimeFormatted) {
+            $validator->errors()->add("break_start_time.{$index}", '休憩時間が不適切な値です');
+            return;
+        }
+
+        // 3. 休憩開始時間と退勤時間の整合性チェック
+        if ($breakStartTimeFormatted >= $clockOutTimeFormatted) {
+            $validator->errors()->add("break_start_time.{$index}", '休憩時間が不適切な値です');
+            return;
+        }
+
+        // 4. 休憩終了時間と退勤時間の整合性チェック
+        if ($breakEndTimeFormatted > $clockOutTimeFormatted) {
+            $validator->errors()->add("break_end_time.{$index}", '休憩時間もしくは退勤時間が不適切な値です');
         }
     }
 
@@ -191,13 +187,10 @@ class AttendanceUpdateRequest extends FormRequest
     {
         return [
             'clock_in_time.required' => '出勤時間を入力してください',
-            'clock_in_time.date_format' => '出勤時間の形式が不正です',
             'clock_out_time.required' => '退勤時間を入力してください',
-            'clock_out_time.date_format' => '退勤時間の形式が不正です',
-            'break_start_time.*.date_format' => '休憩開始時間の形式が不正です',
-            'break_end_time.*.date_format' => '休憩終了時間の形式が不正です',
+            'break_start_time.*.nullable' => '休憩開始時間を入力してください',
+            'break_end_time.*.nullable' => '休憩終了時間を入力してください',
             'remark.required' => '備考を記入してください',
-            'remark.max' => '備考は1000文字以内で入力してください'
         ];
     }
 

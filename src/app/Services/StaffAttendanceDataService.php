@@ -90,4 +90,27 @@ class StaffAttendanceDataService
 
         return $attendanceMap;
     }
+
+    /**
+     * 月文字列をパースして年月を取得
+     *
+     * @param string $month
+     * @return array
+     */
+    public function parseMonth(string $month): array
+    {
+        try {
+            $carbon = Carbon::createFromFormat('Y-m', $month);
+            return [
+                'year' => $carbon->year,
+                'month' => $carbon->month
+            ];
+        } catch (\Exception $e) {
+            // 無効な月の場合は現在の月を返す
+            return [
+                'year' => now()->year,
+                'month' => now()->month
+            ];
+        }
+    }
 }

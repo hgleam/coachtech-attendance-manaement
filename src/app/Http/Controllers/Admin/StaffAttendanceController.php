@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StaffAttendanceRequest;
+use App\Http\Requests\Admin\StaffAttendanceRequest;
 use App\Models\User;
 use App\Services\StaffAttendanceDataService;
 use App\Services\StaffAttendanceCsvService;
@@ -22,18 +22,34 @@ class StaffAttendanceController extends Controller
     public function show(StaffAttendanceRequest $request, $id)
     {
         $user = User::findOrFail($id);
-        $yearMonth = $request->getYearMonth();
-
         $dataService = new StaffAttendanceDataService();
+
+        // クエリパラメータから月を取得、なければリクエストから取得
+        $monthParam = $request->get('month');
+        if ($monthParam) {
+            $yearMonth = $dataService->parseMonth($monthParam);
+        } else {
+            $yearMonth = $request->getYearMonth();
+        }
         $data = $dataService->getMonthlyAttendanceData($id, $yearMonth['year'], $yearMonth['month']);
         $attendanceData = $dataService->formatAttendanceData($data['attendanceMap'], $data['currentMonth']);
+
+        // バリデーションエラーがある場合はエラーメッセージを取得
+        $errorMessage = null;
+        if (session()->has('errors')) {
+            $errors = session('errors');
+            if ($errors->any()) {
+                $errorMessage = $errors->first();
+            }
+        }
 
         return view('admin.attendances.staff', [
             'user' => $user,
             'currentMonth' => $data['currentMonth'],
             'prevMonth' => $data['prevMonth'],
             'nextMonth' => $data['nextMonth'],
-            'attendanceData' => $attendanceData
+            'attendanceData' => $attendanceData,
+            'errorMessage' => $errorMessage
         ]);
     }
 
@@ -46,9 +62,15 @@ class StaffAttendanceController extends Controller
     public function exportCsv(StaffAttendanceRequest $request, $id)
     {
         $user = User::findOrFail($id);
-        $yearMonth = $request->getYearMonth();
-
         $dataService = new StaffAttendanceDataService();
+
+        // クエリパラメータから月を取得、なければリクエストから取得
+        $monthParam = $request->get('month');
+        if ($monthParam) {
+            $yearMonth = $dataService->parseMonth($monthParam);
+        } else {
+            $yearMonth = $request->getYearMonth();
+        }
         $data = $dataService->getMonthlyAttendanceData($id, $yearMonth['year'], $yearMonth['month']);
 
         $csvService = new StaffAttendanceCsvService();
@@ -60,4 +82,5 @@ class StaffAttendanceController extends Controller
             'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
         ]);
     }
+
 }

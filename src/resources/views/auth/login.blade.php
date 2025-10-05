@@ -5,9 +5,8 @@
     <div class='login-page__body'>
         <h2 class='login-page__title'>ログイン</h2>
 
-        <form method='POST' action='{{ route("login") }}' class='login-form' novalidate>
+        <form method='POST' action='{{ route("login") }}' class='login-form' novalidate autocomplete='off'>
             @csrf
-
             <div class='login-form__group'>
                 <label for='email' class='login-form__label'>メールアドレス</label>
                 <input id='email' type='email' class='login-form__input @error("email") is-invalid @enderror' name='email' value='{{ old("email") }}'>

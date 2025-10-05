@@ -2,6 +2,12 @@
 
 @section('content')
 <div class='attendance-list-page'>
+    @if (isset($error))
+        <div class="alert alert-danger">
+            {{ $error }}
+        </div>
+    @endif
+
     <div class='attendance-list-page__header'>
         <h2 class='attendance-list-page__title'>{{ $currentMonth->format('Y年n月') }}の勤怠</h2>
     </div>
