@@ -25,8 +25,8 @@ class RegisterTest extends TestCase
         $userData = [
             'name' => '',
             'email' => 'test@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
+            'password' => 'password!!',
+            'password_confirmation' => 'password!!',
         ];
 
         $response = $this->post('/register', $userData);
@@ -50,8 +50,8 @@ class RegisterTest extends TestCase
         $userData = [
             'name' => 'テストユーザー',
             'email' => '',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
+            'password' => 'password!!',
+            'password_confirmation' => 'password!!',
         ];
 
         $response = $this->post('/register', $userData);
@@ -95,7 +95,7 @@ class RegisterTest extends TestCase
         $userData = [
             'name' => 'テストユーザー',
             'email' => 'test@example.com',
-            'password' => 'password123',
+            'password' => 'password!!',
             'password_confirmation' => 'different',
         ];
 
@@ -145,8 +145,8 @@ class RegisterTest extends TestCase
         $userData = [
             'name' => 'テストユーザー',
             'email' => 'test@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
+            'password' => 'password!!',
+            'password_confirmation' => 'password!!',
         ];
 
         $response = $this->post('/register', $userData);
@@ -160,7 +160,7 @@ class RegisterTest extends TestCase
         ]);
 
         $user = User::where('email', 'test@example.com')->first();
-        $this->assertTrue(Hash::check('password123', $user->password));
+        $this->assertTrue(Hash::check('password!!', $user->password));
         $this->assertNull($user->email_verified_at);
     }
 
@@ -193,8 +193,8 @@ class RegisterTest extends TestCase
         $userData = [
             'name' => 'テストユーザー',
             'email' => 'test@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
+            'password' => 'password!!',
+            'password_confirmation' => 'password!!',
         ];
 
         $response = $this->post('/register', $userData);

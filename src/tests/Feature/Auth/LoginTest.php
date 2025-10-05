@@ -24,7 +24,7 @@ class LoginTest extends TestCase
     {
         $userData = [
             'email' => '',
-            'password' => 'password123',
+            'password' => 'password!!',
         ];
 
         $response = $this->post('/login', $userData);
@@ -70,7 +70,7 @@ class LoginTest extends TestCase
     {
         $user = User::factory()->create([
             'email' => 'test@example.com',
-            'password' => Hash::make('password123'),
+            'password' => Hash::make('password!!'),
         ]);
 
         $userData = [
@@ -94,12 +94,12 @@ class LoginTest extends TestCase
     {
         $user = User::factory()->create([
             'email' => 'test@example.com',
-            'password' => Hash::make('password123'),
+            'password' => Hash::make('password!!'),
         ]);
 
         $response = $this->post('/login', [
             'email' => 'test@example.com',
-            'password' => 'password123',
+            'password' => 'password!!',
         ]);
 
         $response->assertRedirect('/attendance');
@@ -132,7 +132,7 @@ class LoginTest extends TestCase
     {
         $response = $this->post('/login', [
             'email' => 'nonexistent@example.com',
-            'password' => 'password123',
+            'password' => 'password!!',
         ]);
 
         $response->assertSessionHasErrors(['email']);
@@ -149,7 +149,7 @@ class LoginTest extends TestCase
     {
         $user = User::factory()->create([
             'email' => 'test@example.com',
-            'password' => Hash::make('password123'),
+            'password' => Hash::make('password!!'),
         ]);
 
         $response = $this->post('/login', [
