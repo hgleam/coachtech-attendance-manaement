@@ -216,8 +216,6 @@ body {
     background-color: var(--primary-color-dark);
 }
 
-
-
 /* ---- 会員登録ページ ---- */
 .register-page {
     max-width: 680px;
@@ -311,7 +309,85 @@ body {
     text-decoration: underline;
 }
 
+/* メール認証ページ */
+.email-verification-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px); /* ヘッダーの高さを考慮 */
+    text-align: center;
+    padding: 2rem;
+}
 
+/* メール認証メッセージ */
+.email-verification-message {
+    margin-bottom: 2rem;
+}
+
+.email-verification-message p {
+    color: var(--text-color);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    font-size: var(--font-size-2xl);
+    font-weight: bold;
+}
+
+/* 成功メッセージ */
+.email-verification-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 2rem;
+    font-size: var(--font-size-2xl);
+    font-weight: bold;
+}
+
+/* アクションボタンエリア */
+.email-verification-actions {
+    margin-bottom: 1.5rem;
+}
+
+/* 認証ボタン */
+.email-verification-button {
+    display: inline-block;
+    background-color: #E0E0E0;
+    color: var(--text-color);
+    text-decoration: none;
+    padding: 1rem 2rem;
+    border-radius: 6px;
+    font-size: var(--font-size-2xl);
+    font-weight: bold;
+    border: 1px solid #D0D0D0;
+    transition: background-color 0.3s;
+}
+
+.email-verification-button:hover {
+    background-color: #D0D0D0;
+}
+
+/* 再送リンクエリア */
+.email-verification-resend {
+    margin-bottom: 0;
+}
+
+/* 再送リンク */
+.email-verification-resend-link {
+    background: none;
+    border: none;
+    color: #007bff;
+    text-decoration: none;
+    font-size: var(--font-size-xl);
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0;
+}
+
+.email-verification-resend-link:hover {
+    text-decoration: underline;
+}
 
 /* ---- ログインページ ---- */
 .login-page {

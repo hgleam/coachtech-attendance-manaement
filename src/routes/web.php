@@ -35,33 +35,41 @@ Route::post('/login', [App\Http\Controllers\Auth\AuthenticatedSessionController:
 Route::post('/logout', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'destroy'])
     ->name('logout');
 
-Route::get('/email/verify', function () {
-    return view('auth.verify-email');
-})->name('verification.notice');
+// メール認証関連のルート
+Route::get('/email/verify', [App\Http\Controllers\EmailVerificationController::class, 'notice'])
+    ->middleware('auth')
+    ->name('verification.notice');
 
+Route::post('/email/verification-notification', [App\Http\Controllers\EmailVerificationController::class, 'send'])
+    ->middleware(['auth', 'throttle:6,1'])
+    ->name('verification.send');
+
+Route::get('/email/verify/{id}/{hash}', [App\Http\Controllers\EmailVerificationController::class, 'verify'])
+    ->middleware(['auth', 'signed', 'throttle:6,1'])
+    ->name('verification.verify');
 
 Route::get('/attendance', [App\Http\Controllers\AttendanceController::class, 'index'])
-    ->middleware('auth')
+    ->middleware(['auth', 'verified'])
     ->name('attendance.index');
 
 Route::post('/attendance/clock-in', [App\Http\Controllers\AttendanceController::class, 'clockIn'])
-    ->middleware('auth')
+    ->middleware(['auth', 'verified'])
     ->name('attendance.clock-in');
 
 Route::post('/attendance/clock-out', [App\Http\Controllers\AttendanceController::class, 'clockOut'])
-    ->middleware('auth')
+    ->middleware(['auth', 'verified'])
     ->name('attendance.clock-out');
 
 Route::post('/attendance/break-start', [App\Http\Controllers\AttendanceController::class, 'breakStart'])
-    ->middleware('auth')
+    ->middleware(['auth', 'verified'])
     ->name('attendance.break-start');
 
 Route::post('/attendance/break-end', [App\Http\Controllers\AttendanceController::class, 'breakEnd'])
-    ->middleware('auth')
+    ->middleware(['auth', 'verified'])
     ->name('attendance.break-end');
 
 Route::get('/attendance/list', [App\Http\Controllers\AttendanceListController::class, 'index'])
-    ->middleware('auth')
+    ->middleware(['auth', 'verified'])
     ->name('attendance.list');
 
 Route::get('/attendance/{id}', [App\Http\Controllers\AttendanceDetailController::class, 'show'])
@@ -74,7 +82,7 @@ Route::post('/attendance/{id}/correction', [App\Http\Controllers\AttendanceDetai
 
 // 申請一覧画面
 Route::get('/stamp_correction_request/list', [App\Http\Controllers\StampCorrectionRequestListController::class, 'index'])
-    ->middleware('admin_or_user')
+    ->middleware(['admin_or_user'])
     ->name('stamp_correction_request.list');
 
 // 申請承認画面（管理者のみ）

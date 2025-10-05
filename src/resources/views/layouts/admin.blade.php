@@ -6,12 +6,9 @@
     <title>COACHTECH - 管理者</title>
     <meta name='csrf-token' content='{{ csrf_token() }}'>
 
-    <!-- Styles -->
     <link rel='stylesheet' href='{{ asset("css/sanitize.css") }}'>
     <link rel='stylesheet' href='{{ asset("css/style.css") }}'>
 
-    <!-- Scripts -->
-    {{-- <script src='{{ asset("js/app.js") }}' defer></script> --}}
 </head>
 <body>
     <header class='header'>

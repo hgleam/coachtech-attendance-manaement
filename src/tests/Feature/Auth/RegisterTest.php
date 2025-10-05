@@ -151,7 +151,7 @@ class RegisterTest extends TestCase
 
         $response = $this->post('/register', $userData);
 
-        $response->assertRedirect('/attendance');
+        $response->assertRedirect('/email/verify');
 
         // データベースにユーザーが保存されていることを確認
         $this->assertDatabaseHas('users', [

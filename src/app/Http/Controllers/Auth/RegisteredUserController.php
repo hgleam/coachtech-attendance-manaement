@@ -44,7 +44,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        // メール認証を一時的にスキップ
-        return redirect('/attendance');
+        // メール認証画面に遷移
+        return redirect()->route('verification.notice');
     }
 }

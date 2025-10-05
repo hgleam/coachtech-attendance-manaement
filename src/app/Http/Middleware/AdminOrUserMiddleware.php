@@ -21,7 +21,16 @@ class AdminOrUserMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() || session()->has('admin_id')) {
+        // 管理者の場合はメール認証をスキップ
+        if (session()->has('admin_id')) {
+            return $next($request);
+        }
+
+        // 一般ユーザーの場合はメール認証をチェック
+        if (auth()->check()) {
+            if (!auth()->user()->hasVerifiedEmail()) {
+                return redirect()->route('verification.notice');
+            }
             return $next($request);
         }
 
