@@ -168,7 +168,7 @@ class AttendanceDetailTest extends TestCase
         ]);
         session(['admin_id' => $admin->id]);
 
-        $response = $this->get("/attendance/{$this->attendance->id}");
+        $response = $this->get("/admin/attendance/{$this->attendance->id}");
 
         $response->assertStatus(200);
         $response->assertSee($this->user->name);
@@ -193,7 +193,7 @@ class AttendanceDetailTest extends TestCase
         ]);
         session(['admin_id' => $admin->id]);
 
-        $response = $this->post("/attendance/{$this->attendance->id}/correction", [
+        $response = $this->post("/admin/attendance/{$this->attendance->id}/correction", [
             'clock_in_time' => '19:00:00',
             'clock_out_time' => '18:00:00',
             'break_start_time' => ['12:00'],
@@ -219,7 +219,7 @@ class AttendanceDetailTest extends TestCase
         ]);
         session(['admin_id' => $admin->id]);
 
-        $response = $this->post("/attendance/{$this->attendance->id}/correction", [
+        $response = $this->post("/admin/attendance/{$this->attendance->id}/correction", [
             'clock_in_time' => '09:00:00',
             'clock_out_time' => '18:00:00',
             'break_start_time' => ['19:00'],
@@ -244,7 +244,7 @@ class AttendanceDetailTest extends TestCase
         ]);
         session(['admin_id' => $admin->id]);
 
-        $response = $this->post("/attendance/{$this->attendance->id}/correction", [
+        $response = $this->post("/admin/attendance/{$this->attendance->id}/correction", [
             'clock_in_time' => '09:00:00',
             'clock_out_time' => '18:00:00',
             'break_start_time' => ['12:00'],
@@ -269,7 +269,7 @@ class AttendanceDetailTest extends TestCase
         ]);
         session(['admin_id' => $admin->id]);
 
-        $response = $this->post("/attendance/{$this->attendance->id}/correction", [
+        $response = $this->post("/admin/attendance/{$this->attendance->id}/correction", [
             'clock_in_time' => '09:00:00',
             'clock_out_time' => '18:00:00',
             'break_start_time' => ['12:00'],
@@ -479,7 +479,7 @@ class AttendanceDetailTest extends TestCase
 
         $this->actingAs($user);
 
-        $response = $this->get(route('attendance.show', $attendance->id));
+        $response = $this->get("/attendance/{$attendance->id}");
 
         $response->assertStatus(200);
         $response->assertSee('既存の備考内容');
@@ -507,7 +507,7 @@ class AttendanceDetailTest extends TestCase
         ]);
         session(['admin_id' => $admin->id]);
 
-        $response = $this->get(route('attendance.show', $attendance->id));
+        $response = $this->get("/admin/attendance/{$attendance->id}");
 
         $response->assertStatus(200);
         // 管理者用ナビゲーションが表示される
@@ -535,7 +535,7 @@ class AttendanceDetailTest extends TestCase
 
         $this->actingAs($user);
 
-        $response = $this->get(route('attendance.show', $attendance->id));
+        $response = $this->get("/attendance/{$attendance->id}");
 
         $response->assertStatus(200);
         // 修正ボタンは表示されない
@@ -561,7 +561,7 @@ class AttendanceDetailTest extends TestCase
 
         $this->actingAs($user);
 
-        $response = $this->get(route('attendance.show', $attendance->id));
+        $response = $this->get("/attendance/{$attendance->id}");
 
         $response->assertStatus(200);
         // 一般ユーザー用ナビゲーションが表示される
@@ -600,7 +600,7 @@ class AttendanceDetailTest extends TestCase
         $attendance->refresh();
         $this->assertEquals('APPROVED', $attendance->approval_status);
 
-        $response = $this->get(route('attendance.show', $attendance->id));
+        $response = $this->get("/admin/attendance/{$attendance->id}");
 
         $response->assertStatus(200);
         // 修正ボタンは表示されない（type="submit"のボタンは表示されない）

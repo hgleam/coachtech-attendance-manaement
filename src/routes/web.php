@@ -73,11 +73,11 @@ Route::get('/attendance/list', [App\Http\Controllers\AttendanceListController::c
     ->name('attendance.list');
 
 Route::get('/attendance/{id}', [App\Http\Controllers\AttendanceDetailController::class, 'show'])
-    ->middleware('admin_or_user')
+    ->middleware(['auth', 'verified'])
     ->name('attendance.show');
 
 Route::post('/attendance/{id}/correction', [App\Http\Controllers\AttendanceDetailController::class, 'correction'])
-    ->middleware('admin_or_user')
+    ->middleware(['auth', 'verified'])
     ->name('attendance.correction');
 
 // 申請一覧画面
@@ -112,6 +112,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/attendance/list', [App\Http\Controllers\Admin\AttendanceListController::class, 'index'])->name('attendance.list');
 
+    // 管理者用勤怠詳細画面
+    Route::get('/attendance/{id}', [App\Http\Controllers\Admin\AttendanceDetailController::class, 'show'])->name('attendance.show');
+    Route::post('/attendance/{id}/correction', [App\Http\Controllers\Admin\AttendanceDetailController::class, 'correction'])->name('attendance.correction');
 
     });
 });

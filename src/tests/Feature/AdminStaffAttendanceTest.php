@@ -213,7 +213,7 @@ class AdminStaffAttendanceTest extends TestCase
         $response->assertSee('/attendance/' . $attendance->id);
 
         // 詳細リンクをクリック
-        $response = $this->get("/attendance/{$attendance->id}");
+        $response = $this->get("/admin/attendance/{$attendance->id}");
 
         // 勤怠詳細画面に遷移する
         $response->assertStatus(200);
