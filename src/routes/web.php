@@ -39,10 +39,6 @@ Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->name('verification.notice');
 
-Route::get('/attendance', function () {
-    // NOTE: 本来はロジックで出し分けるが、デザイン確認のため全ての状態を一度に表示
-    return view('attendances.index');
-})->name('attendance.index');
 
 Route::get('/attendance', [App\Http\Controllers\AttendanceController::class, 'index'])
     ->middleware('auth')
@@ -52,9 +48,6 @@ Route::post('/attendance/clock-in', [App\Http\Controllers\AttendanceController::
     ->middleware('auth')
     ->name('attendance.clock-in');
 
-Route::get('/stamp_correction_request/list', function () {
-    return view('stamp_correction_requests.list');
-})->name('stamp_correction_request.list');
 Route::post('/attendance/clock-out', [App\Http\Controllers\AttendanceController::class, 'clockOut'])
     ->middleware('auth')
     ->name('attendance.clock-out');
@@ -84,6 +77,15 @@ Route::get('/stamp_correction_request/list', [App\Http\Controllers\StampCorrecti
     ->middleware('admin_or_user')
     ->name('stamp_correction_request.list');
 
+// 申請承認画面（管理者のみ）
+Route::get('/stamp_correction_request/approve/{attendance_correct_request}', [App\Http\Controllers\Admin\StampCorrectionRequestApproveController::class, 'show'])
+    ->middleware('admin')
+    ->name('stamp_correction_request.approve');
+Route::post('/stamp_correction_request/approve/{attendance_correct_request}', [App\Http\Controllers\Admin\StampCorrectionRequestApproveController::class, 'approve'])
+    ->middleware('admin')
+    ->name('stamp_correction_request.approve.post');
+
+
 
 // 管理者
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -92,9 +94,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/login', [App\Http\Controllers\Admin\AuthController::class, 'login'])->name('login');
     Route::post('/logout', [App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('logout');
 
-    Route::get('/staff/list', function () {
-        return view('admin.staff.list');
-    })->name('staff.list');
+    // その他の管理者機能は認証が必要
+    Route::middleware('admin')->group(function () {
 
     Route::get('/staff/list', [App\Http\Controllers\Admin\StaffListController::class, 'index'])->name('staff.list');
 
@@ -103,11 +104,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/attendance/list', [App\Http\Controllers\Admin\AttendanceListController::class, 'index'])->name('attendance.list');
 
-    Route::get('/stamp_correction_request/list', function () {
-        return view('admin.stamp_correction_requests.list');
-    })->name('stamp_correction_request.list');
 
-    Route::get('/stamp_correction_request/approve/{attendance_correct_request}', function ($id) {
-        return view('admin.stamp_correction_requests.approve', ['id' => $id]);
-    })->name('stamp_correction_request.approve');
+    });
 });

@@ -266,7 +266,7 @@ class StampCorrectionRequestListTest extends TestCase
         $response = $this->get('/stamp_correction_request/list');
 
         $response->assertStatus(200);
-        $response->assertSee(route('admin.stamp_correction_request.approve', $attendance->id));
+        $response->assertSee(route('stamp_correction_request.approve', $attendance->id));
     }
 
 

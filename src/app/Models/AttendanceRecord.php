@@ -533,4 +533,15 @@ class AttendanceRecord extends Model
             }
         }
     }
+
+    /**
+     * 修正申請を承認
+     * @return void
+     */
+    public function approve()
+    {
+        $this->update([
+            'approval_status' => 'APPROVED'
+        ]);
+    }
 }

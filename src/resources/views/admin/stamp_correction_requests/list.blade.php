@@ -32,7 +32,7 @@
                     <td>{{ $request->date->format('Y/m/d') }}</td>
                     <td>{{ $request->correction_reason ?: $request->remark }}</td>
                     <td>{{ $request->applied_at ? $request->applied_at->format('Y/m/d') : '-' }}</td>
-                    <td><a href='{{ route("admin.stamp_correction_request.approve", $request->id) }}' class='request-list-card__detail-link'>詳細</a></td>
+                    <td><a href='{{ route("stamp_correction_request.approve", $request->id) }}' class='request-list-card__detail-link'>詳細</a></td>
                 </tr>
                 @empty
                 <tr>
@@ -64,7 +64,7 @@
                     <td>{{ $request->date->format('Y/m/d') }}</td>
                     <td>{{ $request->correction_reason ?: $request->remark }}</td>
                     <td>{{ $request->applied_at ? $request->applied_at->format('Y/m/d') : '-' }}</td>
-                    <td><a href='{{ route("admin.stamp_correction_request.approve", $request->id) }}' class='request-list-card__detail-link'>詳細</a></td>
+                    <td><a href='{{ route("stamp_correction_request.approve", $request->id) }}' class='request-list-card__detail-link'>詳細</a></td>
                 </tr>
                 @empty
                 <tr>
