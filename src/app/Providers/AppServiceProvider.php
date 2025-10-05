@@ -3,26 +3,27 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Carbon\Carbon;
 
+/**
+ * アプリケーションサービスプロバイダ
+ */
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
-     *
+     * アプリケーションサービスを登録
      * @return void
      */
     public function register()
     {
-        //
     }
 
     /**
-     * Bootstrap any application services.
-     *
+     * アプリケーションサービスをブート
      * @return void
      */
     public function boot()
     {
-        //
+        Carbon::setLocale('ja');
     }
 }
