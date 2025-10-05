@@ -96,10 +96,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         return view('admin.staff.list');
     })->name('staff.list');
 
-    Route::get('/attendance/staff/{id}', function ($id) {
-        return view('admin.attendances.staff', ['id' => $id]);
-    })->name('attendance.staff');
     Route::get('/staff/list', [App\Http\Controllers\Admin\StaffListController::class, 'index'])->name('staff.list');
+
+    Route::get('/attendance/staff/{id}', [App\Http\Controllers\Admin\StaffAttendanceController::class, 'show'])->name('attendance.staff');
+    Route::get('/attendance/staff/{id}/csv', [App\Http\Controllers\Admin\StaffAttendanceController::class, 'exportCsv'])->name('attendance.staff.csv');
 
     Route::get('/attendance/list', [App\Http\Controllers\Admin\AttendanceListController::class, 'index'])->name('attendance.list');
 

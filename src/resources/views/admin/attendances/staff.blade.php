@@ -1,18 +1,18 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
 <div class='staff-attendance-page'>
     <div class='staff-attendance-page__header'>
-        <h2 class='staff-attendance-page__title'>西玲奈さんの勤怠</h2>
+        <h2 class='staff-attendance-page__title'>{{ $user->name }}さんの勤怠</h2>
     </div>
 
     <div class='month-navigator'>
-        <a href='#' class='month-navigator__link'>&larr; 前月</a>
+        <a href='{{ route("admin.attendance.staff", ["id" => $user->id, "year" => $prevMonth->year, "month" => $prevMonth->month]) }}' class='month-navigator__link'>&larr; 前月</a>
         <span class='month-navigator__current'>
             <i class='month-navigator__icon'>📅</i>
-            2023/06
+            {{ $currentMonth->format('Y/m') }}
         </span>
-        <a href='#' class='month-navigator__link'>翌月 &rarr;</a>
+        <a href='{{ route("admin.attendance.staff", ["id" => $user->id, "year" => $nextMonth->year, "month" => $nextMonth->month]) }}' class='month-navigator__link'>翌月 &rarr;</a>
     </div>
 
     <div class='staff-attendance-card'>
@@ -28,109 +28,28 @@
                 </tr>
             </thead>
             <tbody class='staff-attendance-card__body'>
-                {{-- ダミーデータ --}}
+                @foreach($attendanceData as $data)
                 <tr>
-                    <td>06/01(木)</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href='#' class='staff-attendance-card__detail-link'>詳細</a></td>
+                    <td>{{ $data['date']->format('m/d') }}({{ ['日', '月', '火', '水', '木', '金', '土'][$data['date']->dayOfWeek] }})</td>
+                    <td>{{ $data['clock_in_time'] }}</td>
+                    <td>{{ $data['clock_out_time'] }}</td>
+                    <td>{{ $data['break_time'] }}</td>
+                    <td>{{ $data['total_work_time'] }}</td>
+                    <td>
+                        @if($data['attendance'])
+                            <a href='{{ route("attendance.show", $data["attendance"]->id) }}' class='staff-attendance-card__detail-link'>詳細</a>
+                        @else
+                            <span>-</span>
+                        @endif
+                    </td>
                 </tr>
-                <tr>
-                    <td>06/02(金)</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href='#' class='staff-attendance-card__detail-link'>詳細</a></td>
-                </tr>
-                <tr>
-                    <td>06/03(土)</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><a href='#' class='staff-attendance-card__detail-link'>詳細</a></td>
-                </tr>
-                <tr>
-                    <td>06/04(日)</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><a href='#' class='staff-attendance-card__detail-link'>詳細</a></td>
-                </tr>
-                <tr>
-                    <td>06/05(月)</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href='#' class='staff-attendance-card__detail-link'>詳細</a></td>
-                </tr>
-                <tr>
-                    <td>06/06(火)</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href='#' class='staff-attendance-card__detail-link'>詳細</a></td>
-                </tr>
-                <tr>
-                    <td>06/07(水)</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href='#' class='staff-attendance-card__detail-link'>詳細</a></td>
-                </tr>
-                <tr>
-                    <td>06/08(木)</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href='#' class='staff-attendance-card__detail-link'>詳細</a></td>
-                </tr>
-                <tr>
-                    <td>06/09(金)</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href='#' class='staff-attendance-card__detail-link'>詳細</a></td>
-                </tr>
-                <tr>
-                    <td>06/10(土)</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><a href='#' class='staff-attendance-card__detail-link'>詳細</a></td>
-                </tr>
-                <tr>
-                    <td>06/11(日)</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><a href='#' class='staff-attendance-card__detail-link'>詳細</a></td>
-                </tr>
-                <tr>
-                    <td>06/12(月)</td>
-                    <td>09:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href='#' class='staff-attendance-card__detail-link'>詳細</a></td>
-                </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
 
     <div class='staff-attendance-page__actions'>
-        <button type='button' class='staff-attendance-page__csv-button'>CSV出力</button>
+        <a href='{{ route("admin.attendance.staff.csv", ["id" => $user->id, "year" => $currentMonth->year, "month" => $currentMonth->month]) }}' class='staff-attendance-page__csv-button'>CSV出力</a>
     </div>
 </div>
 @endsection
