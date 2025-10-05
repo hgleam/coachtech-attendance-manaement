@@ -180,10 +180,12 @@
                 </div>
             @else
                 <div class='attendance-detail-form__error-message'>
-                    @if($attendance->work_state !== 'AFTER_LEAVE')
-                        *退勤完了後の勤怠記録のみ修正が可能です。
+                    @if($attendance->work_state === 'WORKING')
+                        *勤務中のため修正はできません。退勤完了後に修正が可能です。
                     @elseif($attendance->isPending())
                         *承認待ちのため修正はできません。
+                    @elseif($attendance->work_state !== 'AFTER_LEAVE')
+                        *退勤完了後の勤怠記録のみ修正が可能です。
                     @endif
                 </div>
             @endif

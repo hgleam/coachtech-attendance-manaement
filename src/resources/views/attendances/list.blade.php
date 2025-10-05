@@ -34,9 +34,9 @@
                     <td>{{ $data['total_work_time'] ?? '' }}</td>
                     <td>
                         @if ($data['attendance'])
-                            <a href='{{ route("attendance.show", $data["attendance"]->id) }}'>詳細</a>
+                            <a href='{{ route("attendance.show", $data["attendance"]->id) }}' class='attendance-list-card__detail-link'>詳細</a>
                         @else
-                            <span>-</span>
+                            <span class='attendance-list-card__empty-text'>-</span>
                         @endif
                     </td>
                 </tr>

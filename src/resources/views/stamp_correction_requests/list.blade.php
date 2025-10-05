@@ -36,7 +36,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan='6' style='text-align: center; padding: 2rem;'>承認待ちの申請はありません</td>
+                    <td colspan='6' class='request-list-card__empty-cell'>承認待ちの申請はありません</td>
                 </tr>
                 @endforelse
             </tbody>
@@ -68,7 +68,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan='6' style='text-align: center; padding: 2rem;'>承認済みの申請はありません</td>
+                    <td colspan='6' class='request-list-card__empty-cell'>承認済みの申請はありません</td>
                 </tr>
                 @endforelse
             </tbody>

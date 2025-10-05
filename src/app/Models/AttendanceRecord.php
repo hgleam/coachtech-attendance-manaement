@@ -417,7 +417,17 @@ class AttendanceRecord extends Model
      */
     public function canEditAsUser()
     {
-        return !$this->isPending();
+        // 修正申請中は編集不可
+        if ($this->isPending()) {
+            return false;
+        }
+
+        // 勤務中（退勤していない）場合は編集不可
+        if ($this->work_state === 'WORKING') {
+            return false;
+        }
+
+        return true;
     }
 
     /**
