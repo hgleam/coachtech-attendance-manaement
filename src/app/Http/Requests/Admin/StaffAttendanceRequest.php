@@ -27,7 +27,6 @@ class StaffAttendanceRequest extends FormRequest
     public function rules()
     {
         return [
-            'year' => 'nullable|integer',
             'month' => [
                 'nullable',
                 'string',
@@ -47,7 +46,6 @@ class StaffAttendanceRequest extends FormRequest
      */
     public function getYearMonth()
     {
-        $year = $this->get('year');
         $month = $this->get('month');
 
         // monthがY-m形式の場合
@@ -59,9 +57,10 @@ class StaffAttendanceRequest extends FormRequest
             ];
         }
 
+        // デフォルトは現在の年月
         return [
-            'year' => $year ? (int)$year : now()->year,
-            'month' => $month ? (int)$month : now()->month
+            'year' => now()->year,
+            'month' => now()->month
         ];
     }
 
