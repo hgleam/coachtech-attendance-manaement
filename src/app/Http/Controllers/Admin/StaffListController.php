@@ -17,7 +17,7 @@ class StaffListController extends Controller
     {
         // 全一般ユーザーを取得
         /** @var \App\Models\User[] $users */
-        $users = User::query()->orderBy('name')->get();
+        $users = User::query()->orderBy('id')->get();
 
         return view('admin.staff.list', compact('users'));
     }

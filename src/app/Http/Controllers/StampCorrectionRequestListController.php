@@ -33,12 +33,14 @@ class StampCorrectionRequestListController extends Controller
 
         // 承認待ちの申請を取得
         $pendingRequests = (clone $baseQuery)->where('approval_status', Attendance::PENDING)
-            ->orderBy('applied_at', 'desc')
+            ->orderBy('applied_at', 'asc')
+            ->orderBy('id', 'asc')
             ->get();
 
         // 承認済みの申請を取得
         $approvedRequests = (clone $baseQuery)->where('approval_status', Attendance::APPROVED)
-            ->orderBy('applied_at', 'desc')
+            ->orderBy('applied_at', 'asc')
+            ->orderBy('id', 'asc')
             ->get();
 
         $viewName = $isAdmin ? 'admin.stamp_correction_requests.list' : 'stamp_correction_requests.list';
