@@ -26,22 +26,27 @@ use App\Models\AttendanceRecord;
                     {{ $attendance->getFormattedClockInTime() }}　　~　　{{ $attendance->getFormattedClockOutTime() }}
                 </div>
             </div>
-            <div class='correction-approve-card__row'>
-                <div class='correction-approve-card__label'>休憩</div>
-                <div class='correction-approve-card__value'>
-                    @if($attendance->breakRecords->count() > 0)
-                        @foreach($attendance->breakRecords as $break)
-                            {{ AttendanceRecord::normalizeTime($break->start_time) }}　　~　　{{ AttendanceRecord::normalizeTime($break->end_time) }}<br>
-                        @endforeach
-                    @else
-                        ~
-                    @endif
+            @if($attendance->breakRecords->count() > 0)
+                @foreach($attendance->breakRecords as $index => $break)
+                    <div class='correction-approve-card__row'>
+                        <div class='correction-approve-card__label'>
+                            @if($index === 0)
+                                休憩
+                            @else
+                                休憩{{ $index + 1 }}
+                            @endif
+                        </div>
+                        <div class='correction-approve-card__value'>
+                            {{ $break->start_time->format('H:i') }}　　~　　{{ $break->end_time->format('H:i') }}
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <div class='correction-approve-card__row'>
+                    <div class='correction-approve-card__label'>休憩</div>
+                    <div class='correction-approve-card__value'>~</div>
                 </div>
-            </div>
-            <div class='correction-approve-card__row'>
-                <div class='correction-approve-card__label'>休憩2</div>
-                <div class='correction-approve-card__value'> ~ </div>
-            </div>
+            @endif
             <div class='correction-approve-card__row'>
                 <div class='correction-approve-card__label'>備考</div>
                 <div class='correction-approve-card__value'>{{ $attendance->remark ?? 'なし' }}</div>
