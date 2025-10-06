@@ -22,7 +22,7 @@ class StaffAttendanceRequest extends FormRequest
     /**
      * リクエストのバリデーションルールを取得
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, mixed>
      */
     public function rules()
     {

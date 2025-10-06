@@ -2,13 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Constants\Attendance;
 use App\Models\Admin;
 use App\Models\AttendanceRecord;
 use App\Models\BreakRecord;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 /**
@@ -51,8 +50,8 @@ class AdminStaffAttendanceTest extends TestCase
             'date' => '2025-09-01',
             'clock_in_time' => '09:00:00',
             'clock_out_time' => '18:00:00',
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'APPROVED',
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::APPROVED,
             'remark' => '通常勤務',
         ]);
 
@@ -61,8 +60,8 @@ class AdminStaffAttendanceTest extends TestCase
             'date' => '2025-09-02',
             'clock_in_time' => '09:30:00',
             'clock_out_time' => '18:30:00',
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'APPROVED',
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::APPROVED,
             'remark' => '遅刻',
         ]);
 
@@ -108,8 +107,8 @@ class AdminStaffAttendanceTest extends TestCase
             'date' => '2025-08-15',
             'clock_in_time' => '09:00:00',
             'clock_out_time' => '18:00:00',
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'APPROVED',
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::APPROVED,
         ]);
 
         // 管理者でログイン
@@ -152,8 +151,8 @@ class AdminStaffAttendanceTest extends TestCase
             'date' => '2025-10-15',
             'clock_in_time' => '09:00:00',
             'clock_out_time' => '18:00:00',
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'APPROVED',
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::APPROVED,
         ]);
 
         // 管理者でログイン
@@ -196,8 +195,8 @@ class AdminStaffAttendanceTest extends TestCase
             'date' => '2025-09-15',
             'clock_in_time' => '09:00:00',
             'clock_out_time' => '18:00:00',
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'APPROVED',
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::APPROVED,
         ]);
 
         // 管理者でログイン
@@ -268,8 +267,8 @@ class AdminStaffAttendanceTest extends TestCase
             'date' => now()->format('Y-m-d'),
             'clock_in_time' => '09:00:00',
             'clock_out_time' => '18:00:00',
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'APPROVED',
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::APPROVED,
         ]);
 
         // 作成した勤怠記録を確認
@@ -317,8 +316,8 @@ class AdminStaffAttendanceTest extends TestCase
             'date' => '2025-08-15',
             'clock_in_time' => '09:30:00',
             'clock_out_time' => '18:30:00',
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'APPROVED',
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::APPROVED,
         ]);
 
         // 管理者でログイン
@@ -357,8 +356,8 @@ class AdminStaffAttendanceTest extends TestCase
             'date' => now()->format('Y-m-d'),
             'clock_in_time' => '09:00:00',
             'clock_out_time' => '18:00:00',
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'APPROVED',
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::APPROVED,
         ]);
 
         // 休憩記録を作成
@@ -420,8 +419,8 @@ class AdminStaffAttendanceTest extends TestCase
             'date' => now()->format('Y-m-d'),
             'clock_in_time' => '09:00:00',
             'clock_out_time' => '18:00:00',
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'APPROVED',
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::APPROVED,
             'remark' => 'テストデータ',
         ]);
 
@@ -469,8 +468,8 @@ class AdminStaffAttendanceTest extends TestCase
             'date' => '2025-08-15',
             'clock_in_time' => '09:30:00',
             'clock_out_time' => '18:30:00',
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'APPROVED',
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::APPROVED,
             'remark' => '8月データ',
         ]);
 

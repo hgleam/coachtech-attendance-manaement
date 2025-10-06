@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
@@ -15,7 +14,7 @@ class Admin extends Authenticatable
 
     /**
      * フィルタリング可能な属性
-     * @var array
+     * @var array<string>
      */
     protected $fillable = [
         'email',
@@ -24,7 +23,7 @@ class Admin extends Authenticatable
 
     /**
      * 非表示属性
-     * @var array
+     * @var array<string>
      */
     protected $hidden = [
         'password',
@@ -46,7 +45,7 @@ class Admin extends Authenticatable
      */
     public function checkPassword(string $password): bool
     {
-        return \Illuminate\Support\Facades\Hash::check($password, $this->password);
+        return \Illuminate\Support\Facades\Hash::check($password, $this->getAttribute('password'));
     }
 
     /**
@@ -57,7 +56,8 @@ class Admin extends Authenticatable
      */
     public static function authenticate(string $email, string $password): ?self
     {
-        $admin = static::where('email', $email)->first();
+        /** @var \App\Models\Admin|null $admin */
+        $admin = static::query()->where('email', $email)->first();
 
         if (!$admin || !$admin->checkPassword($password)) {
             return null;

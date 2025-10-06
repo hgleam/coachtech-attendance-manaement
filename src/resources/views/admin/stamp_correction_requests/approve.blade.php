@@ -1,3 +1,7 @@
+@php
+use App\Models\AttendanceRecord;
+@endphp
+
 @extends('layouts.admin')
 
 @section('content')
@@ -27,7 +31,7 @@
                 <div class='correction-approve-card__value'>
                     @if($attendance->breakRecords->count() > 0)
                         @foreach($attendance->breakRecords as $break)
-                            {{ \App\Models\AttendanceRecord::normalizeTime($break->start_time) }}　　~　　{{ \App\Models\AttendanceRecord::normalizeTime($break->end_time) }}<br>
+                            {{ AttendanceRecord::normalizeTime($break->start_time) }}　　~　　{{ AttendanceRecord::normalizeTime($break->end_time) }}<br>
                         @endforeach
                     @else
                         ~

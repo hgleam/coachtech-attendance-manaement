@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Carbon\Carbon;
 
 /**
  * 勤怠データ整形サービスクラス
@@ -11,7 +10,7 @@ class AttendanceDataFormatterService
 {
     /**
      * 月次勤怠データを整形
-     * @param \Illuminate\Database\Eloquent\Collection $attendanceRecords
+     * @param \App\Models\AttendanceRecord[] $attendanceRecords
      * @param \Carbon\Carbon $currentMonth
      * @return array
      */
@@ -25,7 +24,7 @@ class AttendanceDataFormatterService
         for ($day = 1; $day <= $daysInMonth; $day++) {
             $date = $currentMonth->copy()->day($day);
             $dateString = $date->format('Y-m-d');
-            $attendance = $attendanceRecords->filter(function ($record) use ($dateString) {
+            $attendance = collect($attendanceRecords)->filter(function ($record) use ($dateString) {
                 return $record->date->format('Y-m-d') === $dateString;
             })->first();
 
@@ -42,8 +41,8 @@ class AttendanceDataFormatterService
 
     /**
      * 管理者用勤怠データを整形
-     * @param \Illuminate\Database\Eloquent\Collection $attendanceRecords
-     * @param \Illuminate\Database\Eloquent\Collection $allUsers
+     * @param \Illuminate\Support\Collection $attendanceRecords
+     * @param \App\Models\User[] $allUsers
      * @return array
      */
     public function formatAdminAttendanceData($attendanceRecords, $allUsers)
@@ -51,7 +50,7 @@ class AttendanceDataFormatterService
         $data = [];
 
         foreach ($allUsers as $user) {
-            $attendance = $attendanceRecords->where('user_id', $user->id)->first();
+            $attendance = $attendanceRecords->where('user_id', $user->getKey())->first();
 
             $data[] = [
                 'user' => $user,

@@ -38,7 +38,8 @@ class AttendanceListController extends Controller
                 ->get();
 
             // 全ユーザーを取得（勤怠記録がないユーザーも含める）
-            $allUsers = User::orderBy('name')->get();
+            /** @var \App\Models\User[] $allUsers */
+            $allUsers = User::query()->orderBy('id')->get();
 
             // 勤怠データを整形
             $formatter = new AttendanceDataFormatterService();

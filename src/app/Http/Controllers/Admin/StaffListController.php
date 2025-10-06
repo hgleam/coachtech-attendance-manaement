@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 /**
  * 管理者用スタッフ一覧コントローラー
@@ -17,7 +16,8 @@ class StaffListController extends Controller
     public function index()
     {
         // 全一般ユーザーを取得
-        $users = User::orderBy('name')->get();
+        /** @var \App\Models\User[] $users */
+        $users = User::query()->orderBy('name')->get();
 
         return view('admin.staff.list', compact('users'));
     }

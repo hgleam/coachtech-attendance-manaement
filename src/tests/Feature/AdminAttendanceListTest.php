@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\Admin;
 use App\Models\User;
 use App\Models\AttendanceRecord;
-use App\Models\BreakRecord;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Carbon\Carbon;

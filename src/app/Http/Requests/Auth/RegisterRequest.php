@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules;
 
 /**
  * 登録リクエスト
@@ -23,7 +22,7 @@ class RegisterRequest extends FormRequest
     /**
      * リクエストのバリデーションルールを取得
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, mixed>
      */
     public function rules()
     {

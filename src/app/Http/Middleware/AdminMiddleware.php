@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * 管理者ミドルウェア
@@ -15,11 +14,9 @@ class AdminMiddleware
      * リクエストを処理
      * @param \Illuminate\Http\Request $request
      * @param \Closure $next
-     * @return \Illuminate\Http\RedirectResponse
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
         if (!session()->has('admin_id')) {
             return redirect()->route('admin.login');

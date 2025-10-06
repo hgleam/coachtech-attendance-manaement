@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\AttendanceRecord;
-use App\Models\User;
 use Carbon\Carbon;
 
 /**
@@ -23,9 +22,10 @@ class StaffAttendanceDataService
         $currentMonth = Carbon::create($year, $month, 1);
 
         // 指定された年月の勤怠記録を取得
+        /** @var \App\Models\AttendanceRecord[] $attendanceRecords */
         $attendanceRecords = AttendanceRecord::where('user_id', $userId)
-            ->whereYear('date', $year)
-            ->whereMonth('date', $month)
+            ->whereYear('date', (string)$year)
+            ->whereMonth('date', (string)$month)
             ->with('breakRecords')
             ->orderBy('date')
             ->get();
@@ -73,7 +73,7 @@ class StaffAttendanceDataService
 
     /**
      * 勤怠記録のマップを作成
-     * @param \Illuminate\Database\Eloquent\Collection $attendanceRecords
+     * @param \App\Models\AttendanceRecord[] $attendanceRecords
      * @return array
      */
     private function createAttendanceMap($attendanceRecords)

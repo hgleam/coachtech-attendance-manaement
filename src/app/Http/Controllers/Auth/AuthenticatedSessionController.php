@@ -14,8 +14,6 @@ class AuthenticatedSessionController extends Controller
 {
     /**
      * ログイン画面を表示
-     *
-     * @return \Illuminate\View\View
      */
     public function create()
     {
@@ -45,7 +43,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request)
     {
-        Auth::guard('web')->logout();
+        Auth::logout();
 
         $request->session()->invalidate();
 

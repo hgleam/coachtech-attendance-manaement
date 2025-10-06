@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Constants\Attendance;
 use App\Models\AttendanceRecord;
 use App\Models\BreakRecord;
 use App\Models\User;

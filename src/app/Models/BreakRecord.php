@@ -45,10 +45,13 @@ class BreakRecord extends Model
      */
     public function getBreakDurationAttribute(): ?int
     {
-        if (!$this->start_time || !$this->end_time) {
+        $startTime = $this->getAttribute('start_time');
+        $endTime = $this->getAttribute('end_time');
+
+        if (!$startTime || !$endTime) {
             return null;
         }
 
-        return $this->start_time->diffInMinutes($this->end_time);
+        return $startTime->diffInMinutes($endTime);
     }
 }

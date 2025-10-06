@@ -16,8 +16,6 @@ class RegisteredUserController extends Controller
 {
     /**
      * 登録ビューを表示
-     *
-     * @return \Illuminate\View\View
      */
     public function create()
     {
@@ -34,7 +32,8 @@ class RegisteredUserController extends Controller
     {
         $validated = $request->validated();
 
-        $user = User::create([
+        /** @var \App\Models\User $user */
+        $user = User::query()->create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),

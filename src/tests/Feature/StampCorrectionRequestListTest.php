@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Constants\Attendance;
 use App\Models\User;
 use App\Models\AttendanceRecord;
-use App\Models\BreakRecord;
 use App\Models\Admin;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -44,8 +44,8 @@ class StampCorrectionRequestListTest extends TestCase
             'date' => '2025-09-15',
             'clock_in_time' => '09:00',
             'clock_out_time' => '18:00',
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'PENDING',
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::PENDING,
             'applied_at' => now(),
             'remark' => '遅延のため'
         ]);
@@ -55,8 +55,8 @@ class StampCorrectionRequestListTest extends TestCase
             'date' => '2025-09-16',
             'clock_in_time' => '09:30',
             'clock_out_time' => '18:30',
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'PENDING',
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::PENDING,
             'applied_at' => now()->subDay(),
             'remark' => '早退のため'
         ]);
@@ -68,8 +68,8 @@ class StampCorrectionRequestListTest extends TestCase
             'date' => '2025-09-17',
             'clock_in_time' => '09:00',
             'clock_out_time' => '18:00',
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'PENDING',
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::PENDING,
             'applied_at' => now(),
             'remark' => '他のユーザーの申請'
         ]);
@@ -94,8 +94,8 @@ class StampCorrectionRequestListTest extends TestCase
             'date' => '2025-09-10',
             'clock_in_time' => '09:00',
             'clock_out_time' => '18:00',
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'APPROVED',
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::APPROVED,
             'applied_at' => now()->subDays(2),
             'remark' => '承認済み申請1'
         ]);
@@ -105,8 +105,8 @@ class StampCorrectionRequestListTest extends TestCase
             'date' => '2025-09-11',
             'clock_in_time' => '09:30',
             'clock_out_time' => '18:30',
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'APPROVED',
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::APPROVED,
             'applied_at' => now()->subDays(3),
             'remark' => '承認済み申請2'
         ]);
@@ -117,8 +117,8 @@ class StampCorrectionRequestListTest extends TestCase
             'date' => '2025-09-12',
             'clock_in_time' => '09:00',
             'clock_out_time' => '18:00',
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'PENDING',
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::PENDING,
             'applied_at' => now(),
             'remark' => '承認待ち申請'
         ]);
@@ -143,8 +143,8 @@ class StampCorrectionRequestListTest extends TestCase
             'date' => '2025-09-15',
             'clock_in_time' => '09:00',
             'clock_out_time' => '18:00',
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'PENDING',
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::PENDING,
             'applied_at' => now(),
             'remark' => 'テスト申請'
         ]);
@@ -176,7 +176,7 @@ class StampCorrectionRequestListTest extends TestCase
         AttendanceRecord::factory()->create([
             'user_id' => $user1->id,
             'date' => '2025-09-15',
-            'approval_status' => 'PENDING',
+            'approval_status' => Attendance::PENDING,
             'applied_at' => now(),
             'remark' => '電車遅延'
         ]);
@@ -184,7 +184,7 @@ class StampCorrectionRequestListTest extends TestCase
         AttendanceRecord::factory()->create([
             'user_id' => $user2->id,
             'date' => '2025-09-16',
-            'approval_status' => 'PENDING',
+            'approval_status' => Attendance::PENDING,
             'applied_at' => now()->subDay(),
             'remark' => '残業作業'
         ]);
@@ -219,7 +219,7 @@ class StampCorrectionRequestListTest extends TestCase
         AttendanceRecord::factory()->create([
             'user_id' => $user1->id,
             'date' => '2025-09-10',
-            'approval_status' => 'APPROVED',
+            'approval_status' => Attendance::APPROVED,
             'applied_at' => now()->subDays(2),
             'remark' => '体調不良'
         ]);
@@ -227,7 +227,7 @@ class StampCorrectionRequestListTest extends TestCase
         AttendanceRecord::factory()->create([
             'user_id' => $user2->id,
             'date' => '2025-09-11',
-            'approval_status' => 'APPROVED',
+            'approval_status' => Attendance::APPROVED,
             'applied_at' => now()->subDays(3),
             'remark' => 'プロジェクト締切'
         ]);
@@ -258,7 +258,7 @@ class StampCorrectionRequestListTest extends TestCase
         $attendance = AttendanceRecord::factory()->create([
             'user_id' => $user->id,
             'date' => '2025-09-15',
-            'approval_status' => 'PENDING',
+            'approval_status' => Attendance::PENDING,
             'applied_at' => now(),
             'remark' => '電車遅延'
         ]);

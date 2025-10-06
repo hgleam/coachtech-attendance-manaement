@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AttendanceRecord;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 /**
  * 修正申請承認コントローラー
@@ -33,7 +32,8 @@ class StampCorrectionRequestApproveController extends Controller
      */
     public function approve(Request $request, $id)
     {
-        $attendance = AttendanceRecord::findOrFail($id);
+        /** @var \App\Models\AttendanceRecord $attendance */
+        $attendance = AttendanceRecord::query()->findOrFail($id);
 
         $attendance->approve();
 

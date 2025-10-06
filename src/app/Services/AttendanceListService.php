@@ -4,8 +4,6 @@ namespace App\Services;
 
 use App\Models\AttendanceRecord;
 use App\Models\User;
-use App\Services\AttendanceDataFormatterService;
-use App\Services\AttendanceDataService;
 
 /**
  * 勤怠一覧サービス
@@ -17,15 +15,18 @@ class AttendanceListService
      * @param User $user
      * @param string $month
      * @param string|null $errorMessage
-     * @return array
+     * @return array<string, mixed>
      */
     public function getAttendanceListData(User $user, string $month, ?string $errorMessage = null): array
     {
         $attendanceService = new AttendanceDataService();
         $navigationData = $attendanceService->getMonthNavigationData($month);
 
-        $attendanceRecords = AttendanceRecord::forUser($user->id)
-            ->forMonth($navigationData['currentMonth']->year, $navigationData['currentMonth']->month)
+        /** @var \App\Models\AttendanceRecord[] $attendanceRecords */
+        $attendanceRecords = AttendanceRecord::query()->where('user_id', $user->getKey())
+            ->whereYear('date', $navigationData['currentMonth']->year)
+            ->whereMonth('date', $navigationData['currentMonth']->month)
+            ->orderBy('date')
             ->get();
 
         $formatter = new AttendanceDataFormatterService();

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\AttendanceRecord;
 use App\Http\Requests\AttendanceUpdateRequest;
-use Illuminate\Http\Request;
 
 /**
  * 一般ユーザー用勤怠詳細画面コントローラー
@@ -19,7 +18,8 @@ class AttendanceDetailController extends Controller
      */
     public function show($id)
     {
-        $attendance = AttendanceRecord::with(['breakRecords', 'user'])->findOrFail($id);
+        /** @var \App\Models\AttendanceRecord $attendance */
+        $attendance = AttendanceRecord::query()->with(['breakRecords', 'user'])->findOrFail($id);
 
         // 認可チェック
         if (!$attendance->canAccess()) {
@@ -39,7 +39,8 @@ class AttendanceDetailController extends Controller
      */
     public function correction(AttendanceUpdateRequest $request, $id)
     {
-        $attendance = AttendanceRecord::findOrFail($id);
+        /** @var \App\Models\AttendanceRecord $attendance */
+        $attendance = AttendanceRecord::query()->findOrFail($id);
 
         // 認可チェック
         if (!$attendance->canModify()) {

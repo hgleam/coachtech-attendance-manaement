@@ -19,6 +19,7 @@ class AttendanceListController extends Controller
      */
     public function index(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         $month = $request->get('month', now()->format('Y-m'));
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Constants\Attendance;
 use App\Models\User;
 use App\Models\AttendanceRecord;
 use App\Models\BreakRecord;
@@ -37,7 +38,7 @@ class AttendanceDetailTest extends TestCase
             'date' => '2025-09-09',
             'clock_in_time' => '09:00',
             'clock_out_time' => '18:00',
-            'work_state' => 'AFTER_LEAVE'
+            'work_state' => Attendance::AFTER_LEAVE,
         ]);
 
         // 休憩記録を作成
@@ -143,7 +144,7 @@ class AttendanceDetailTest extends TestCase
         $this->assertEquals('09:30:00', $this->attendance->clock_in_time);
         $this->assertEquals('18:30:00', $this->attendance->clock_out_time);
         $this->assertEquals('修正申請のテスト', $this->attendance->remark);
-        $this->assertEquals('PENDING', $this->attendance->approval_status);
+        $this->assertEquals(Attendance::PENDING, $this->attendance->approval_status);
         $this->assertNotNull($this->attendance->applied_at);
 
         // 休憩記録が更新されていることを確認
@@ -393,7 +394,7 @@ class AttendanceDetailTest extends TestCase
             'date' => '2025-09-09',
             'clock_in_time' => '09:00',
             'clock_out_time' => '18:00',
-            'work_state' => 'AFTER_LEAVE'
+            'work_state' => Attendance::AFTER_LEAVE,
         ]);
 
         $response = $this->actingAs($this->user)->get("/attendance/{$otherAttendance->id}");
@@ -414,8 +415,8 @@ class AttendanceDetailTest extends TestCase
             'date' => '2025-09-10',
             'clock_in_time' => '09:00',
             'clock_out_time' => '18:00',
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'APPROVED'
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::APPROVED,
         ]);
 
         $response = $this->actingAs($this->user)->post("/attendance/{$approvedAttendance->id}/correction", [
@@ -443,8 +444,8 @@ class AttendanceDetailTest extends TestCase
             'date' => '2025-09-11',
             'clock_in_time' => '09:00',
             'clock_out_time' => '18:00',
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'PENDING'
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::PENDING,
         ]);
 
         $response = $this->actingAs($this->user)->post("/attendance/{$pendingAttendance->id}/correction", [
@@ -470,8 +471,8 @@ class AttendanceDetailTest extends TestCase
         $user = User::factory()->create();
         $attendance = AttendanceRecord::factory()->create([
             'user_id' => $user->id,
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'APPROVED',
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::APPROVED,
             'remark' => '既存の備考内容'
         ]);
 
@@ -494,8 +495,8 @@ class AttendanceDetailTest extends TestCase
         $user = User::factory()->create();
         $attendance = AttendanceRecord::factory()->create([
             'user_id' => $user->id,
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'APPROVED'
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::APPROVED,
         ]);
 
         // 管理者を作成してセッションを設定
@@ -527,8 +528,8 @@ class AttendanceDetailTest extends TestCase
         $user = User::factory()->create();
         $attendance = AttendanceRecord::factory()->create([
             'user_id' => $user->id,
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'PENDING'
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::PENDING,
         ]);
 
         $this->actingAs($user);
@@ -553,8 +554,8 @@ class AttendanceDetailTest extends TestCase
         $user = User::factory()->create();
         $attendance = AttendanceRecord::factory()->create([
             'user_id' => $user->id,
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'APPROVED'
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::APPROVED,
         ]);
 
         $this->actingAs($user);
@@ -582,8 +583,8 @@ class AttendanceDetailTest extends TestCase
         $user = User::factory()->create();
         $attendance = AttendanceRecord::factory()->create([
             'user_id' => $user->id,
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'APPROVED',
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::APPROVED,
             'applied_at' => now()
         ]);
 
@@ -596,7 +597,7 @@ class AttendanceDetailTest extends TestCase
 
         // デバッグ: 作成された勤怠記録の値を確認
         $attendance->refresh();
-        $this->assertEquals('APPROVED', $attendance->approval_status);
+        $this->assertEquals(Attendance::APPROVED, $attendance->approval_status);
 
         $response = $this->get("/admin/attendance/{$attendance->id}");
 

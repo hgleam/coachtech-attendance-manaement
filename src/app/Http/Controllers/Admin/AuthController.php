@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminLoginRequest;
-use Illuminate\Http\Request;
 use App\Models\Admin;
 
 /**
@@ -40,7 +39,7 @@ class AuthController extends Controller
                 ->withInput($request->except('password'));
         }
 
-        session(['admin_id' => $admin->id]);
+        session(['admin_id' => $admin->getKey()]);
 
         return redirect()->route('admin.attendance.list');
     }

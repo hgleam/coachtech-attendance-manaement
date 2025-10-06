@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AttendanceRecord;
 use App\Http\Requests\AttendanceUpdateRequest;
-use Illuminate\Http\Request;
 
 /**
  * 管理者用勤怠詳細コントローラー
@@ -35,7 +34,8 @@ class AttendanceDetailController extends Controller
      */
     public function correction(AttendanceUpdateRequest $request, $id)
     {
-        $attendance = AttendanceRecord::findOrFail($id);
+        /** @var \App\Models\AttendanceRecord $attendance */
+        $attendance = AttendanceRecord::query()->findOrFail($id);
 
         // 管理者は直接修正可能
         $attendance->applyCorrection($request, true);

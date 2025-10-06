@@ -82,7 +82,7 @@ class AttendanceRecord extends Model
      */
     public function getApprovalStatusDisplayAttribute(): string
     {
-        return Attendance::getApprovalStatusDisplay($this->approval_status);
+        return Attendance::getApprovalStatusDisplay($this->approval_status ?? '');
     }
 
     /**
@@ -92,9 +92,11 @@ class AttendanceRecord extends Model
      */
     public static function getTodayRecord(int $userId): ?self
     {
-        return self::where('user_id', $userId)
+        /** @var \App\Models\AttendanceRecord|null $record */
+        $record = static::query()->where('user_id', $userId)
             ->where('date', today())
             ->first();
+        return $record;
     }
 
     /**
@@ -131,7 +133,8 @@ class AttendanceRecord extends Model
             }
         }
 
-        self::create([
+        /** @var \App\Models\AttendanceRecord $record */
+        $record = static::query()->create([
             'user_id' => $userId,
             'date' => today(),
             'clock_in_time' => now()->format('H:i'),
@@ -165,7 +168,7 @@ class AttendanceRecord extends Model
         DB::transaction(function () {
             // 休憩中の場合は休憩を終了
             if ($this->work_state === Attendance::ON_BREAK) {
-                $activeBreak = BreakRecord::where('attendance_record_id', $this->id)
+                $activeBreak = BreakRecord::query()->where('attendance_record_id', $this->id)
                     ->whereNull('end_time')
                     ->first();
 
@@ -196,7 +199,7 @@ class AttendanceRecord extends Model
 
         DB::transaction(function () {
             // 休憩記録を作成
-            BreakRecord::create([
+            BreakRecord::query()->create([
                 'attendance_record_id' => $this->id,
                 'start_time' => now()->format('H:i'),
             ]);
@@ -226,7 +229,7 @@ class AttendanceRecord extends Model
 
         DB::transaction(function () {
             // アクティブな休憩記録を終了
-            $activeBreak = BreakRecord::where('attendance_record_id', $this->id)
+            $activeBreak = BreakRecord::query()->where('attendance_record_id', $this->id)
                 ->whereNull('end_time')
                 ->first();
 
@@ -301,12 +304,15 @@ class AttendanceRecord extends Model
     public function calculateBreakTime()
     {
         try {
-            $breakRecords = BreakRecord::where('attendance_record_id', $this->id)->get();
+            $breakRecords = BreakRecord::query()->where('attendance_record_id', $this->id)->get();
 
             $totalBreakMinutes = 0;
+            /** @var \App\Models\BreakRecord $break */
             foreach ($breakRecords as $break) {
-                if ($break->start_time && $break->end_time) {
-                    $totalBreakMinutes += $break->start_time->diffInMinutes($break->end_time);
+                $startTime = $break->getAttribute('start_time');
+                $endTime = $break->getAttribute('end_time');
+                if ($startTime && $endTime) {
+                    $totalBreakMinutes += $startTime->diffInMinutes($endTime);
                 }
             }
 
@@ -377,7 +383,7 @@ class AttendanceRecord extends Model
      * @param int $month
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeForMonth($query, $year, $month)
+    public function scopeForMonth($query, int $year, int $month)
     {
         return $query->whereYear('date', $year)
                      ->whereMonth('date', $month)
@@ -388,18 +394,18 @@ class AttendanceRecord extends Model
      * 承認済みかどうかを判定
      * @return bool
      */
-    public function isApproved()
+    public function isApproved(): bool
     {
-        return $this->approval_status === Attendance::APPROVED;
+        return ($this->approval_status ?? '') === Attendance::APPROVED;
     }
 
     /**
      * 申請中かどうかを判定
      * @return bool
      */
-    public function isPending()
+    public function isPending(): bool
     {
-        return $this->approval_status === Attendance::PENDING;
+        return ($this->approval_status ?? '') === Attendance::PENDING;
     }
 
     /**
@@ -505,9 +511,9 @@ class AttendanceRecord extends Model
     private function updateAttendanceData($request, $isAdmin)
     {
         $updateData = [
-            'clock_in_time' => $request->clock_in_time,
-            'clock_out_time' => $request->clock_out_time,
-            'remark' => $request->remark,
+            'clock_in_time' => $request->input('clock_in_time'),
+            'clock_out_time' => $request->input('clock_out_time'),
+            'remark' => $request->input('remark'),
             'applied_at' => now()
         ];
 
@@ -545,7 +551,7 @@ class AttendanceRecord extends Model
 
             // 開始時間または終了時間のどちらかが入力されている場合は作成
             if (!empty($startTime) || !empty($endTime)) {
-                \App\Models\BreakRecord::create([
+                BreakRecord::query()->create([
                     'attendance_record_id' => $this->id,
                     'start_time' => $startTime ?: null,
                     'end_time' => $endTime ?: null
@@ -561,7 +567,7 @@ class AttendanceRecord extends Model
     public function approve()
     {
         $this->update([
-            'approval_status' => 'APPROVED'
+            'approval_status' => Attendance::APPROVED
         ]);
     }
 }

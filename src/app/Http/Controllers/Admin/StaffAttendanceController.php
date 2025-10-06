@@ -17,11 +17,12 @@ class StaffAttendanceController extends Controller
      * 指定ユーザーの月次勤怠画面を表示
      * @param StaffAttendanceRequest $request
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function show(StaffAttendanceRequest $request, $id)
     {
-        $user = User::findOrFail($id);
+        /** @var \App\Models\User $user */
+        $user = User::query()->findOrFail($id);
         $dataService = new StaffAttendanceDataService();
 
         // クエリパラメータから月を取得、なければリクエストから取得
@@ -61,7 +62,8 @@ class StaffAttendanceController extends Controller
      */
     public function exportCsv(StaffAttendanceRequest $request, $id)
     {
-        $user = User::findOrFail($id);
+        /** @var \App\Models\User $user */
+        $user = User::query()->findOrFail($id);
         $dataService = new StaffAttendanceDataService();
 
         // クエリパラメータから月を取得、なければリクエストから取得
@@ -75,7 +77,7 @@ class StaffAttendanceController extends Controller
 
         $csvService = new StaffAttendanceCsvService();
         $csvData = $csvService->generateCsvData($data['attendanceMap'], $data['currentMonth'], $user);
-        $fileName = sprintf('%s_%s_%s.csv', $user->name, $data['currentMonth']->format('Y'), $data['currentMonth']->format('m'));
+        $fileName = sprintf('%s_%s_%s.csv', $user->getAttribute('name'), $data['currentMonth']->format('Y'), $data['currentMonth']->format('m'));
 
         return response($csvData, 200, [
             'Content-Type' => 'text/csv; charset=UTF-8',

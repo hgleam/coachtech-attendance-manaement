@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Attendance;
 use App\Models\AttendanceRecord;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,20 +22,22 @@ class StampCorrectionRequestListController extends Controller
 
         if ($isAdmin) {
             // 管理者の場合：全ユーザーの申請を表示
-            $baseQuery = AttendanceRecord::with(['user', 'breakRecords']);
+            /** @var \App\Models\AttendanceRecord $baseQuery */
+            $baseQuery = AttendanceRecord::query()->with(['user', 'breakRecords']);
         } else {
             // 一般ユーザーの場合：自分の申請のみ表示
             $userId = Auth::id();
-            $baseQuery = AttendanceRecord::where('user_id', $userId)->with(['user', 'breakRecords']);
+            /** @var \App\Models\AttendanceRecord $baseQuery */
+            $baseQuery = AttendanceRecord::query()->where('user_id', $userId)->with(['user', 'breakRecords']);
         }
 
         // 承認待ちの申請を取得
-        $pendingRequests = (clone $baseQuery)->where('approval_status', 'PENDING')
+        $pendingRequests = (clone $baseQuery)->where('approval_status', Attendance::PENDING)
             ->orderBy('applied_at', 'desc')
             ->get();
 
         // 承認済みの申請を取得
-        $approvedRequests = (clone $baseQuery)->where('approval_status', 'APPROVED')
+        $approvedRequests = (clone $baseQuery)->where('approval_status', Attendance::APPROVED)
             ->orderBy('applied_at', 'desc')
             ->get();
 

@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Constants\Attendance;
 use App\Models\User;
 use App\Models\AttendanceRecord;
 use App\Models\Admin;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 /**
@@ -38,8 +38,8 @@ class AdminStampCorrectionRequestApproveTest extends TestCase
             'date' => '2025-09-15',
             'clock_in_time' => '09:05:00', // 修正申請後の時間
             'clock_out_time' => '18:00:00',
-            'work_state' => 'AFTER_LEAVE',
-            'approval_status' => 'PENDING',
+            'work_state' => Attendance::AFTER_LEAVE,
+            'approval_status' => Attendance::PENDING,
             'applied_at' => now(),
             'remark' => '電車の遅延により5分遅刻しました。',
         ]);
@@ -63,7 +63,7 @@ class AdminStampCorrectionRequestApproveTest extends TestCase
 
         $this->attendanceRecord->refresh();
 
-        $this->assertEquals('APPROVED', $this->attendanceRecord->approval_status);
+        $this->assertEquals(Attendance::APPROVED, $this->attendanceRecord->approval_status);
 
         $this->assertEquals('09:05:00', $this->attendanceRecord->clock_in_time);
     }
@@ -130,7 +130,7 @@ class AdminStampCorrectionRequestApproveTest extends TestCase
 
         // 勤怠記録の状態を確認
         $this->attendanceRecord->refresh();
-        if ($this->attendanceRecord->approval_status !== 'APPROVED') {
+        if ($this->attendanceRecord->approval_status !== Attendance::APPROVED) {
             $this->fail("勤怠記録の承認状態が正しくありません。現在の状態: " . $this->attendanceRecord->approval_status);
         }
 

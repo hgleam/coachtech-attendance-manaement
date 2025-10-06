@@ -17,9 +17,10 @@ class AttendanceController extends Controller
      */
     public function index()
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
-        $currentWorkState = AttendanceRecord::getCurrentWorkState($user->id);
-        $todayRecord = AttendanceRecord::getTodayRecord($user->id);
+        $currentWorkState = AttendanceRecord::getCurrentWorkState($user->getKey());
+        $todayRecord = AttendanceRecord::getTodayRecord($user->getKey());
 
         $data = [
             'currentWorkState' => $currentWorkState,
@@ -39,8 +40,9 @@ class AttendanceController extends Controller
      */
     public function clockIn(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
-        $result = AttendanceRecord::clockIn($user->id);
+        $result = AttendanceRecord::clockIn($user->getKey());
 
         if (!$result['success']) {
             return back()->withErrors(['attendance' => $result['error']]);
@@ -57,8 +59,9 @@ class AttendanceController extends Controller
      */
     public function clockOut(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
-        $todayRecord = AttendanceRecord::getTodayRecord($user->id);
+        $todayRecord = AttendanceRecord::getTodayRecord($user->getKey());
 
         if (!$todayRecord) {
             return back()->withErrors(['attendance' => '出勤していないため退勤できません']);
@@ -81,8 +84,9 @@ class AttendanceController extends Controller
      */
     public function breakStart(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
-        $todayRecord = AttendanceRecord::getTodayRecord($user->id);
+        $todayRecord = AttendanceRecord::getTodayRecord($user->getKey());
 
         if (!$todayRecord) {
             return back()->withErrors(['attendance' => '出勤していないため休憩できません']);
@@ -105,8 +109,9 @@ class AttendanceController extends Controller
      */
     public function breakEnd(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
-        $todayRecord = AttendanceRecord::getTodayRecord($user->id);
+        $todayRecord = AttendanceRecord::getTodayRecord($user->getKey());
 
         if (!$todayRecord) {
             return back()->withErrors(['attendance' => '出勤していないため休憩終了できません']);
