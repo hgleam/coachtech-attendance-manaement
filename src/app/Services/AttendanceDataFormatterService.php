@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-
 /**
  * 勤怠データ整形サービスクラス
  */

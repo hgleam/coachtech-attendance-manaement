@@ -15,7 +15,9 @@ use App\Notifications\EmailVerificationNotification;
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
 
     /**
      * マスアサイン可能なアトリビュート
@@ -60,6 +62,6 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function sendEmailVerificationNotification()
     {
-        $this->notify(new EmailVerificationNotification);
+        $this->notify(new EmailVerificationNotification());
     }
 }

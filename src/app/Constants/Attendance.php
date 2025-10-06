@@ -15,10 +15,10 @@ class Attendance
      * AFTER_LEAVE: 退勤済
      * @var string
      */
-    const BEFORE_WORK = 'BEFORE_WORK';
-    const WORKING = 'WORKING';
-    const ON_BREAK = 'ON_BREAK';
-    const AFTER_LEAVE = 'AFTER_LEAVE';
+    public const BEFORE_WORK = 'BEFORE_WORK';
+    public const WORKING = 'WORKING';
+    public const ON_BREAK = 'ON_BREAK';
+    public const AFTER_LEAVE = 'AFTER_LEAVE';
 
     /**
      * 承認ステータスの定数
@@ -27,9 +27,9 @@ class Attendance
      * REJECTED: 却下
      * @var string
      */
-    const PENDING = 'PENDING';
-    const APPROVED = 'APPROVED';
-    const REJECTED = 'REJECTED';
+    public const PENDING = 'PENDING';
+    public const APPROVED = 'APPROVED';
+    public const REJECTED = 'REJECTED';
 
     /**
      * 勤怠状態の表示名を取得

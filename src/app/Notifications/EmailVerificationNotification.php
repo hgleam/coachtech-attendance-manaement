@@ -38,7 +38,7 @@ class EmailVerificationNotification extends Notification
     {
         $verificationUrl = $this->verificationUrl($notifiable);
 
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject('メールアドレス認証のお願い')
             ->greeting('勤怠管理システム')
             ->line('ご登録いただき、ありがとうございます。')
