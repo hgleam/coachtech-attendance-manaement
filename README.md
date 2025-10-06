@@ -28,6 +28,7 @@
 - **フロントエンド**: Blade, CSS, JavaScript
 - **データベース**: MySQL
 - **開発環境**: Docker, Docker Compose
+- **コード品質**: Larastan (PHPStan + Laravel), PHP CS Fixer
 
 ---
 
@@ -179,6 +180,32 @@ docker compose exec php php artisan test --coverage
 
 ## 🔧 開発・デバッグ
 
+### コード品質チェック
+
+このプロジェクトでは、コード品質を保つために以下のツールを導入しています。
+
+#### Larastan (静的解析)
+
+```bash
+# 型チェックとコード品質の分析
+docker compose exec php ./vendor/bin/phpstan analyse app --memory-limit=512M --level=5
+
+# 設定ファイル: phpstan.neon
+```
+
+#### PHP CS Fixer (コード整形)
+
+```bash
+# 未使用のuse文を削除
+docker compose exec php ./vendor/bin/php-cs-fixer fix app --rules=no_unused_imports
+
+# テストファイルの未使用のuse文を削除
+docker compose exec php ./vendor/bin/php-cs-fixer fix tests --rules=no_unused_imports
+
+# 全体的なコード整形
+docker compose exec php ./vendor/bin/php-cs-fixer fix app
+```
+
 ### ログの確認
 
 ```bash
@@ -193,6 +220,7 @@ docker compose logs -f php
 
 ```bash
 # データベースに直接アクセス
+docker compose exec mysql mysql -u laravel_user -p laravel_db
 ```
 
 ### キャッシュのクリア
