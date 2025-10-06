@@ -423,6 +423,11 @@ class AttendanceRecord extends Model
      */
     public function canEditAsUser()
     {
+        // 承認済みは編集不可
+        if ($this->isApproved()) {
+            return false;
+        }
+
         // 修正申請中は編集不可
         if ($this->isPending()) {
             return false;
@@ -517,9 +522,9 @@ class AttendanceRecord extends Model
             'applied_at' => now()
         ];
 
-        if ($isAdmin) {
-            $updateData['approval_status'] = Attendance::APPROVED;
-        } else {
+        // 一般ユーザーの場合のみ承認状態をPENDINGに設定
+        // 管理者の場合は既存の承認状態を維持
+        if (!$isAdmin) {
             $updateData['approval_status'] = Attendance::PENDING;
         }
 

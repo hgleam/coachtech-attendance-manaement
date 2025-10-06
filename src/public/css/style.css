@@ -1637,6 +1637,16 @@ body {
     filter: brightness(0.9);
 }
 
+/* 承認済みボタン */
+.correction-approve-page__button--approved {
+    background-color: #696969;
+    cursor: not-allowed;
+}
+
+.correction-approve-page__button--approved:hover {
+    filter: none;
+}
+
 /* -- 共通 -- */
 
 /* アラートメッセージ */

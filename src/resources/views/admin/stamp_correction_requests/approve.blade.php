@@ -50,10 +50,14 @@ use App\Models\AttendanceRecord;
     </div>
 
     <div class='correction-approve-page__actions'>
-        <form method='POST' action='{{ route("stamp_correction_request.approve.post", $attendance->id) }}' style='display: inline;'>
-            @csrf
-            <button type='submit' class='correction-approve-page__button' name='action' value='approve'>承認</button>
-        </form>
+        @if($attendance->approval_status === \App\Constants\Attendance::APPROVED)
+            <button type='button' class='correction-approve-page__button correction-approve-page__button--approved' disabled>承認済み</button>
+        @else
+            <form method='POST' action='{{ route("stamp_correction_request.approve.post", $attendance->id) }}' style='display: inline;'>
+                @csrf
+                <button type='submit' class='correction-approve-page__button' name='action' value='approve'>承認</button>
+            </form>
+        @endif
     </div>
 </div>
 @endsection
