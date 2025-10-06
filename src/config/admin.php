@@ -10,6 +10,6 @@ return [
     |
     */
 
-    'emails' => env('ADMIN_EMAILS', 'admin1@example.com,admin2@example.com'),
+    'emails' => env('ADMIN_EMAILS', 'admin@example.com'),
     'default_password' => env('ADMIN_DEFAULT_PASSWORD', 'password!!'),
 ];

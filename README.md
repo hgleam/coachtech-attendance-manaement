@@ -86,7 +86,13 @@
    ```bash
    docker compose exec php php artisan migrate --seed
    ```
-7. **アプリケーションへのアクセス**
+7. **不要なテーブルの削除**
+   `personal_access_tokens`テーブルは不要なため、以下のコマンドで削除します。
+
+   ```bash
+   docker compose exec php php artisan tinker --execute="DB::statement('DROP TABLE IF EXISTS personal_access_tokens');"
+   ```
+8. **アプリケーションへのアクセス**
    上記の手順が完了したら、ブラウザで以下のURLにアクセスしてください。
 
    - アプリケーション: [http://localhost:82](http://localhost:82)
@@ -99,11 +105,6 @@
 
 `--seed` オプションでデータベースを初期化すると、以下のテスト用アカウントが作成されます。動作確認に利用してください。
 
-- **一般ユーザーアカウント**
-
-  - メールアドレス: `test@example.com`
-  - パスワード: `password!!`
-  - 備考: 勤怠データが登録済みの状態です。
 - **管理者アカウント**
 
   - メールアドレス: `admin@example.com`
@@ -128,23 +129,11 @@ docker compose exec php php artisan test tests/Feature/Auth/
 
 # 勤怠関連のテスト
 docker compose exec php php artisan test tests/Feature/AttendanceTest.php
-
-# 管理者関連のテスト
-docker compose exec php php artisan test tests/Feature/Admin/
-```
-
-### テストカバレッジの確認
-
-```bash
-# テストカバレッジレポートの生成
-docker compose exec php php artisan test --coverage
 ```
 
 ### テストの種類
 
-- **Feature Tests**: エンドツーエンドの機能テスト
-- **Unit Tests**: 個別のクラスやメソッドのテスト
-- **Integration Tests**: 複数のコンポーネント間の連携テスト
+- **Feature Tests**: エンドツーエンドの機能テスト（認証、勤怠管理、管理者機能など）
 
 ### 主要なテストケース
 
