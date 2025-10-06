@@ -34,8 +34,8 @@
                 @foreach ($attendanceData as $data)
                 <tr>
                     <td>{{ $data['date']->format('m/d') }}({{ ['日', '月', '火', '水', '木', '金', '土'][$data['date']->dayOfWeek] }})</td>
-                    <td>{{ $data['attendance'] ? $data['attendance']->clock_in_time : '' }}</td>
-                    <td>{{ $data['attendance'] ? $data['attendance']->clock_out_time : '' }}</td>
+                    <td>{{ $data['attendance'] ? $data['attendance']->getFormattedClockInTime() : '' }}</td>
+                    <td>{{ $data['attendance'] ? $data['attendance']->getFormattedClockOutTime() : '' }}</td>
                     <td>{{ $data['break_time'] ?? '' }}</td>
                     <td>{{ $data['total_work_time'] ?? '' }}</td>
                     <td>
